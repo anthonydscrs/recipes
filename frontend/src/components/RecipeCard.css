@@ -1,0 +1,171 @@
+.recipe-card {
+  background: #ffffff;
+  border: 1px solid #E8E0D5;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.recipe-card:hover {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+}
+
+/* Image */
+
+.recipe-card__image-container {
+  position: relative;
+  height: 210px;
+  overflow: hidden;
+  background: #EDE7DE;
+}
+
+.recipe-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+
+  transition: transform 0.4s ease;
+}
+
+.recipe-card:hover .recipe-card__image {
+  transform: scale(1.04);
+}
+
+/* Badges */
+
+.recipe-card__badges {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  display: flex;
+  gap: 6px;
+}
+
+.recipe-badge {
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.recipe-badge--summer {
+  background: #F3D98B;
+  color: #7A6020;
+}
+
+.recipe-badge--winter {
+  background: #7FB5D1;
+  color: #FFFFFF;
+}
+
+.recipe-badge--dessert {
+  background: #FC6532;
+  color: #FFFFFF;
+}
+
+.recipe-badge--dish {
+  background: rgba(255, 255, 255, 0.92);
+  color: #9A8A7C;
+}
+
+/* Tags régime */
+
+.recipe-badge--viande {
+  background: #E8B4B0;
+  color: #7A2E28;
+}
+
+.recipe-badge--végé {
+  background: #B8DDC4;
+  color: #1F5C38;
+}
+
+.recipe-badge--féculent {
+  background: #EDE0A8;
+  color: #7A6420;
+}
+
+
+/* Content */
+
+.recipe-card__content {
+  padding: 20px 20px 22px;
+}
+
+.recipe-card__title {
+  margin: 0 0 7px;
+
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+
+  color: #4A4038;
+}
+
+.recipe-card__description {
+  margin: 0;
+
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
+
+  color: #9A8A7C;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* Tablette */
+
+@media (max-width: 768px) {
+  .recipe-card__image-container {
+    height: 190px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+  .recipe-card__image-container {
+    height: 170px;
+  }
+
+  .recipe-card__content {
+    padding: 14px 14px 16px;
+  }
+
+  .recipe-card__title {
+    font-size: 15.5px;
+    margin-bottom: 5px;
+  }
+
+  .recipe-card__description {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .recipe-badge {
+    font-size: 9px;
+    padding: 2px 8px;
+  }
+
+  .recipe-card__badges {
+    top: 8px;
+    right: 8px;
+    gap: 4px;
+  }
+}
