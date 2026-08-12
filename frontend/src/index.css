@@ -14,3 +14,23 @@ body {
   margin: 0;
   background-color: #FAF6F0;
 }
+
+html, body, #root {
+  min-height: 100vh;
+  background-color: #FAF6F0;
+}
+
+/* Recipe grid */
+
+.recipes-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(300px, 1fr)
+  );
+  gap: 24px;
+}
