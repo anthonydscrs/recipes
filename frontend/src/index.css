@@ -1,7 +1,16 @@
-body {
-  margin: 0;
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&display=swap');
+
+* {
+  box-sizing: border-box;
 }
 
-h1 {
-  color: red;
+html {
+  background-color: #FAF6F0;
+  color: #4A4038;
+  font-family: 'Outfit', system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: #FAF6F0;
 }

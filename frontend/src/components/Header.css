@@ -21,8 +21,6 @@
   align-items: center;
 }
 
-/* Logo */
-
 .header__logo {
   margin-right: 32px;
   padding: 0;
@@ -40,8 +38,6 @@
   cursor: pointer;
 }
 
-/* Navigation */
-
 .header__nav {
   height: 100%;
 
@@ -51,7 +47,6 @@
 
 .header__link {
   height: 60px;
-
   padding: 0 20px;
 
   border: none;
@@ -80,7 +75,6 @@
 
 .header__link--active {
   background-color: rgba(26, 56, 72, 0.1);
-
   border-bottom-color: #1A3848;
 
   color: #1A3848;
