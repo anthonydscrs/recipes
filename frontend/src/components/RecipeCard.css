@@ -69,30 +69,23 @@
 }
 
 .recipe-badge--dessert {
-  background: #FC6532;
+  background: #D97BA8;
   color: #FFFFFF;
 }
 
-.recipe-badge--dish {
-  background: rgba(255, 255, 255, 0.92);
-  color: #9A8A7C;
-}
-
-/* Tags régime */
-
 .recipe-badge--viande {
-  background: #E8B4B0;
+  background: #C96A5B;
   color: #7A2E28;
 }
 
 .recipe-badge--végé {
-  background: #B8DDC4;
+  background: #74B27D;
   color: #1F5C38;
 }
 
 .recipe-badge--féculent {
-  background: #EDE0A8;
-  color: #7A6420;
+  background: rgba(255, 255, 255, 0.92);
+  color: #9A8A7C;
 }
 
 

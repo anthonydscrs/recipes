@@ -10,8 +10,7 @@ const mockRecipes = [
     image:
       'https://images.unsplash.com/photo-1484325881845-65073528922e?w=600&h=420&fit=crop&auto=format',
     season: 'Hiver',
-    category: 'Plat',
-     tags: 'viande',
+     category:  'viande',
   },
   {
     id: 2,
@@ -21,8 +20,7 @@ const mockRecipes = [
     image:
       'https://images.unsplash.com/photo-1713561058969-793049b01712?w=600&h=420&fit=crop&auto=format',
     season: 'Été',
-    category: 'Plat',
-     tags: 'féculent',
+     category:  'féculent',
   },
   {
     id: 3,
@@ -32,8 +30,7 @@ const mockRecipes = [
     image:
       'https://images.unsplash.com/photo-1781611172399-60ffdb6be527?w=600&h=420&fit=crop&auto=format',
     season: 'Hiver',
-    category: 'Dessert',
-     tags: 'végé',
+     category:  'végé',
   },
     {
     id: 4,
@@ -43,8 +40,7 @@ const mockRecipes = [
     image:
       'https://images.unsplash.com/photo-1781611172399-60ffdb6be527?w=600&h=420&fit=crop&auto=format',
     season: 'Hiver',
-    category: 'Dessert',
-     tags: 'viande',
+    category:  'viande',
   },
     {
     id: 5,
@@ -54,8 +50,7 @@ const mockRecipes = [
     image:
       'https://images.unsplash.com/photo-1781611172399-60ffdb6be527?w=600&h=420&fit=crop&auto=format',
     season: 'Hiver',
-    category: 'Dessert',
-     tags: 'féculent',
+     category:  'féculent',
   },
     {
     id: 6,
@@ -65,8 +60,7 @@ const mockRecipes = [
     image:
       'https://images.unsplash.com/photo-1781611172399-60ffdb6be527?w=600&h=420&fit=crop&auto=format',
     season: 'Hiver',
-    category: 'Dessert',
-     tags: 'végé',
+     category: 'Dessert',
   },
     {
     id: 7,
@@ -76,8 +70,7 @@ const mockRecipes = [
     image:
       'https://images.unsplash.com/photo-1713561058969-793049b01712?w=600&h=420&fit=crop&auto=format',
     season: 'Été',
-    category: 'Plat',
-    tags: 'féculent',
+    category:  'féculent',
   },
 ]
 
