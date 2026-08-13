@@ -24,19 +24,19 @@ function RecipeCard({ recipe, onClick }) {
             {recipe.season === 'Été' ? '☀︎ Été' : '❄ Hiver'}
           </span>
 
-<span
-  className={`recipe-badge ${
-    recipe.category === 'végé'
-      ? 'recipe-badge--végé'
-      : recipe.category === 'féculent'
-      ? 'recipe-badge--féculent'
-      : recipe.category === 'viande'
-      ? 'recipe-badge--viande'
-      : 'recipe-badge--dessert'
-  }`}
->
-  {recipe.category}
-</span>
+          <span
+            className={`recipe-badge ${
+              recipe.category === 'végé'
+                ? 'recipe-badge--végé'
+                : recipe.category === 'féculent'
+                ? 'recipe-badge--féculent'
+                : recipe.category === 'viande'
+                ? 'recipe-badge--viande'
+                : 'recipe-badge--dessert'
+            }`}
+          >
+            {recipe.category}
+          </span>
         </div>
       </div>
 

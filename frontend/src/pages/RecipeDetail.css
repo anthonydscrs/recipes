@@ -1,0 +1,455 @@
+.recipe-detail {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  color: #4a4038;
+}
+
+/* =========================
+   RETOUR
+========================= */
+
+.recipe-detail__back {
+  border: none;
+  background: none;
+  padding: 0;
+  margin-bottom: 30px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #65a8d0;
+
+  cursor: pointer;
+}
+
+.recipe-detail__back:hover {
+  color: #4f8fb8;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.recipe-detail__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 52px;
+  align-items: start;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.recipe-detail__badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.recipe-detail__badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 12px;
+  border-radius: 20px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.recipe-detail__badge--summer {
+  background: #8bc2df;
+  color: white;
+}
+
+.recipe-detail__badge--winter {
+  background: #83b9d5;
+  color: white;
+}
+
+.recipe-detail__badge--viande {
+  background: #f6e7e7;
+  color: #a83b3b;
+}
+
+.recipe-detail__badge--féculent {
+  background: #f7ead7;
+  color: #9c682c;
+}
+
+.recipe-detail__badge--végé {
+  background: #e5f1e3;
+  color: #4e8a52;
+}
+
+.recipe-detail__badge--Dessert,
+.recipe-detail__badge--dessert {
+  background: #f3e4ef;
+  color: #a25b91;
+}
+
+/* =========================
+   TITRE
+========================= */
+
+.recipe-detail__title {
+  margin: 0;
+
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(42px, 4vw, 58px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+
+  color: #4a3327;
+}
+
+/* =========================
+   NOTE
+========================= */
+
+.recipe-detail__rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  margin: 16px 0 18px;
+
+  font-family: 'Outfit', sans-serif;
+}
+
+.recipe-detail__rating > span {
+  font-size: 21px;
+  color: #efa21b;
+  letter-spacing: -3px;
+}
+
+.recipe-detail__rating .empty-star {
+  color: #c9b7a6;
+}
+
+.recipe-detail__rating button {
+  border: none;
+  background: transparent;
+
+  margin-left: 15px;
+  padding: 0;
+
+  font-size: 29px;
+  line-height: 1;
+
+  color: #c9b7a6;
+  cursor: pointer;
+}
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.recipe-detail__description {
+  max-width: 700px;
+  margin: 0 0 28px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+
+  color: #806f62;
+}
+
+/* =========================
+   PHOTO
+========================= */
+
+.recipe-detail__image {
+  display: block;
+
+  width: 100%;
+  aspect-ratio: 4 / 3;
+
+  object-fit: cover;
+
+  border-radius: 11px;
+}
+
+/* =========================
+   CARTE INGREDIENTS / PRÉPARATION
+========================= */
+
+.recipe-detail__card {
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #e6ded5;
+  border-radius: 14px;
+
+  box-shadow: 0 5px 18px rgba(80, 60, 40, 0.08);
+}
+
+/* =========================
+   ONGLETS
+========================= */
+
+.recipe-detail__tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  border-bottom: 1px solid #e6ded5;
+}
+
+.recipe-detail__tab {
+  position: relative;
+
+  border: none;
+  background: transparent;
+
+  padding: 16px 10px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+
+  color: #a1816d;
+
+  cursor: pointer;
+}
+
+.recipe-detail__tab:hover {
+  color: #65a8d0;
+}
+
+.recipe-detail__tab--active {
+  color: #65a8d0;
+}
+
+.recipe-detail__tab--active::after {
+  content: '';
+
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+
+  background: #65b4dd;
+}
+
+/* =========================
+   CONTENU
+========================= */
+
+.recipe-detail__content {
+  min-height: 400px;
+}
+
+/* =========================
+   INGREDIENTS
+========================= */
+
+.recipe-detail__ingredients {
+  padding: 20px 22px;
+}
+
+.recipe-detail__ingredient {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-height: 40px;
+
+  border-bottom: 1px solid #eee7e0;
+}
+
+.recipe-detail__ingredient:last-child {
+  border-bottom: none;
+}
+
+.recipe-detail__ingredient > span {
+  flex-shrink: 0;
+
+  font-size: 18px;
+  font-weight: 300;
+
+  color: #f05b48;
+}
+
+.recipe-detail__ingredient p {
+  margin: 0;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+
+  color: #493e36;
+}
+
+/* =========================
+   PRÉPARATION
+========================= */
+
+.recipe-detail__preparation {
+  padding: 20px 22px;
+}
+
+.recipe-detail__step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  padding: 14px 0;
+
+  border-bottom: 1px solid #eee7e0;
+}
+
+.recipe-detail__step:first-child {
+  padding-top: 0;
+}
+
+.recipe-detail__step:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.recipe-detail__step > span {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 27px;
+  height: 27px;
+
+  border-radius: 50%;
+
+  background: #65a8d0;
+  color: white;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.recipe-detail__step p {
+  margin: 3px 0 0;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+
+  color: #493e36;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 950px) {
+  .recipe-detail__layout {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 30px;
+  }
+
+  .recipe-detail__title {
+    font-size: 44px;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .recipe-detail {
+    padding: 22px 18px 60px;
+  }
+
+  .recipe-detail__back {
+    margin-bottom: 24px;
+  }
+
+  /* On passe tout en une seule colonne */
+  .recipe-detail__layout {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .recipe-detail__main {
+    width: 100%;
+  }
+
+  .recipe-detail__title {
+    font-size: 40px;
+  }
+
+  .recipe-detail__description {
+    font-size: 15px;
+    margin-bottom: 22px;
+  }
+
+  .recipe-detail__image {
+    aspect-ratio: 4 / 3;
+    border-radius: 9px;
+  }
+
+  .recipe-detail__card {
+    width: 100%;
+  }
+
+  .recipe-detail__ingredient {
+    min-height: 44px;
+  }
+
+  .recipe-detail__content {
+    min-height: 0;
+  }
+
+  .recipe-detail__step {
+    gap: 12px;
+  }
+}
+
+/* =========================
+   PETIT MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .recipe-detail {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .recipe-detail__title {
+    font-size: 34px;
+  }
+
+  .recipe-detail__rating {
+    margin-top: 12px;
+  }
+
+  .recipe-detail__description {
+    font-size: 14px;
+  }
+
+  .recipe-detail__ingredients,
+  .recipe-detail__preparation {
+    padding: 16px;
+  }
+
+  .recipe-detail__ingredient p,
+  .recipe-detail__step p {
+    font-size: 13px;
+  }
+
+  .recipe-detail__step {
+    padding: 12px 0;
+  }
+}
