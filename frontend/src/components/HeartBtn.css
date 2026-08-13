@@ -1,0 +1,18 @@
+.heart-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.heart-btn__icon {
+  transition: transform 0.15s ease, fill 0.15s ease, stroke 0.15s ease;
+}
+
+.heart-btn__icon--active {
+  transform: scale(1.15);
+}
