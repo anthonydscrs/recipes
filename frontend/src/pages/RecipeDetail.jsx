@@ -1,8 +1,12 @@
 import { useState } from 'react'
+import HeartBtn from '../components/HeartBtn'
+import StarRating from '../components/StarRating'
 import './RecipeDetail.css'
 
 function RecipeDetail({ recipe, onBack }) {
   const [activeTab, setActiveTab] = useState('ingredients')
+  const [isFavorite, setIsFavorite] = useState(false)
+  const [rating, setRating] = useState(0)
 
   return (
     <main className="recipe-detail">
@@ -41,11 +45,14 @@ function RecipeDetail({ recipe, onBack }) {
             {recipe.title}
           </h1>
 
-          <div className="recipe-detail__rating">
-            <span>★★★★</span>
-            <span className="empty-star">☆</span>
-            <button>♡</button>
-          </div>
+      <div className="recipe-detail__rating">
+        <StarRating rating={rating} onChange={setRating} size={20} />
+        <HeartBtn
+          active={isFavorite}
+          onClick={() => setIsFavorite((prev) => !prev)}
+          size={22}
+        />
+      </div>
 
           <p className="recipe-detail__description">
             {recipe.description}
