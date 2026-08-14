@@ -20,8 +20,6 @@ html, body, #root {
   background-color: #FAF6F0;
 }
 
-/* Recipe grid */
-
 
 
 /* SUPPRIME l'ancien bloc .recipes-grid (celui avec max-width/margin/padding)
@@ -49,6 +47,30 @@ html, body, #root {
      tout ça vient du parent .recipes-page maintenant */
 }
 
+.add-recipe-btn {
+  padding: 9px 18px;
+
+  background: #fc6532;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(252, 101, 50, 0.28);
+
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.add-recipe-btn:hover {
+  background: #c94e22;
+}
+
+
+
 @media (max-width: 768px) {
   .recipes-page {
     padding: 24px 20px 60px;
@@ -59,6 +81,10 @@ html, body, #root {
   .recipes-page {
     padding: 20px 16px 60px;
   }
+    .add-recipe-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }s
 
   .recipes-grid {
     gap: 16px;

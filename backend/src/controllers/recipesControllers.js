@@ -46,6 +46,13 @@ const createRecipe = async (req, res) => {
       preparation,
     } = req.body;
 
+    // validation minimale
+    if (!group_id || !title || !category || !season || !ingredients || !preparation) {
+      return res.status(400).json({
+        error: "group_id, title, category, season, ingredients et preparation sont requis",
+      });
+    }
+
     const [result] = await pool.query(
       `INSERT INTO recipes
         (group_id, created_by, title, description, image_url, category, season, ingredients, preparation)

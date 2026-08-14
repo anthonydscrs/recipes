@@ -1,0 +1,84 @@
+.add-recipe__image-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.add-recipe__image-dropzone {
+  position: relative;
+  width: 130px;
+  height: 100px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f2ede6;
+  border: 2px dashed #e8e0d5;
+  border-radius: 8px;
+
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.add-recipe__image-dropzone:hover {
+  border-color: #7fb5d1;
+}
+
+.add-recipe__image-placeholder {
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+  color: #9a8a7c;
+}
+
+.add-recipe__image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.add-recipe__image-overlay {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(74, 64, 56, 0.55);
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.add-recipe__image-input {
+  display: none;
+}
+
+.add-recipe__image-info {
+  flex: 1;
+}
+
+.add-recipe__image-remove {
+  margin-top: 8px;
+  padding: 0;
+
+  background: none;
+  border: none;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #65a8d0;
+
+  cursor: pointer;
+}
+
+.add-recipe__image-remove:hover {
+  color: #4f8fb8;
+}
