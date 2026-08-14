@@ -34,7 +34,7 @@ CREATE TABLE recipes (
   image_url VARCHAR(500),
 
   category ENUM('viande', 'végé', 'féculent', 'dessert') NOT NULL,
-  season ENUM('Été', 'Hiver', 'Automne', 'Printemps') NOT NULL,
+  season ENUM('Été', 'Hiver') NOT NULL,
 
   ingredients TEXT NOT NULL,     -- un ingrédient par ligne
   preparation TEXT NOT NULL,     -- une étape par ligne

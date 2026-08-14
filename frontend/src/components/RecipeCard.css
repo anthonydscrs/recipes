@@ -37,14 +37,18 @@
   transform: scale(1.04);
 }
 
-/* Badges */
+/* Badges — à gauche, largeur limitée pour ne jamais passer sous le cœur */
 
 .recipe-card__badges {
   position: absolute;
   top: 10px;
-  right: 10px;
+  left: 10px;
+  z-index: 1;
+
+  max-width: calc(100% - 56px); /* réserve la place du cœur à droite */
 
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
 }
 
@@ -56,6 +60,7 @@
   font-weight: 600;
   letter-spacing: 0.05em;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .recipe-badge--summer {
@@ -88,6 +93,34 @@
   color: #9A8A7C;
 }
 
+/* Cœur — à droite, toujours au-dessus */
+
+.recipe-card__heart {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.recipe-card__heart:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  transform: scale(1.06);
+}
 
 /* Content */
 
@@ -122,6 +155,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 /* Tablette */
 
 @media (max-width: 768px) {
@@ -158,7 +192,15 @@
 
   .recipe-card__badges {
     top: 8px;
-    right: 8px;
+    left: 8px;
     gap: 4px;
+    max-width: calc(100% - 46px);
+  }
+
+ .recipe-card__heart {
+    top: 6px;
+    right: 6px;
+    width: 26px;
+    height: 26px;
   }
 }

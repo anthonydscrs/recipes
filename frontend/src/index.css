@@ -22,15 +22,45 @@ html, body, #root {
 
 /* Recipe grid */
 
-.recipes-grid {
+
+
+/* SUPPRIME l'ancien bloc .recipes-grid (celui avec max-width/margin/padding)
+   et remplace-le par ces 3 règles */
+
+.recipes-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 32px 80px;
+  box-sizing: border-box;
+}
 
+.recipes-count {
+  font-size: 12px;
+  color: #B8A898;
+  letter-spacing: 0.04em;
+  margin: 0 0 18px;
+}
+
+.recipes-grid {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(300px, 1fr)
-  );
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
+  /* PAS de max-width, PAS de margin auto, PAS de padding ici —
+     tout ça vient du parent .recipes-page maintenant */
+}
+
+@media (max-width: 768px) {
+  .recipes-page {
+    padding: 24px 20px 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .recipes-page {
+    padding: 20px 16px 60px;
+  }
+
+  .recipes-grid {
+    gap: 16px;
+  }
 }

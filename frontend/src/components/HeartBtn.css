@@ -10,9 +10,20 @@
 }
 
 .heart-btn__icon {
-  transition: transform 0.15s ease, fill 0.15s ease, stroke 0.15s ease;
+  transition:
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    fill 0.15s ease,
+    stroke 0.15s ease;
+}
+
+.heart-btn:hover .heart-btn__icon {
+  transform: scale(1.1);
 }
 
 .heart-btn__icon--active {
   transform: scale(1.15);
+}
+
+.heart-btn:hover .heart-btn__icon--active {
+  transform: scale(1.22);
 }
