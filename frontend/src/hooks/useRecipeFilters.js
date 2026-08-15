@@ -9,7 +9,7 @@ export function useRecipeFilters(recipes) {
   const filtered = useMemo(() => {
     return recipes.filter((r) => {
       if (season !== 'Tous' && r.season !== season) return false
-      if (category !== 'Tous' && r.category !== category) return false
+     if (category !== 'Tous' && !r.category?.includes(category)) return false
       if (favoriteOnly && !r.favorite) return false
       if (search && !r.title.toLowerCase().includes(search.toLowerCase())) return false
       return true

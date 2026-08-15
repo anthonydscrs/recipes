@@ -1,8 +1,21 @@
 const pool = require("../database");
 
+const ALLOWED_CATEGORIES = ["viande", "végé", "féculent", "dessert"];
+
+const normalizeCategories = (category) => {
+  const list = Array.isArray(category)
+    ? category
+    : typeof category === "string"
+      ? category.split(",")
+      : [];
+
+  return list.map((c) => c.trim()).filter(Boolean);
+};
+
 const formatRecipe = (r) => ({
   ...r,
   image: r.image_url,
+  category: r.category ? r.category.split(",") : [],
   ingredients: r.ingredients.split("\n"),
   preparation: r.preparation.split("\n"),
 });
@@ -46,10 +59,24 @@ const createRecipe = async (req, res) => {
       preparation,
     } = req.body;
 
+    const categoryList = normalizeCategories(category);
+    const invalidCategory = categoryList.some(
+      (c) => !ALLOWED_CATEGORIES.includes(c)
+    );
+
     // validation minimale
-    if (!group_id || !title || !category || !season || !ingredients || !preparation) {
+    if (
+      !group_id ||
+      !title ||
+      categoryList.length === 0 ||
+      invalidCategory ||
+      !season ||
+      !ingredients ||
+      !preparation
+    ) {
       return res.status(400).json({
-        error: "group_id, title, category, season, ingredients et preparation sont requis",
+        error:
+          "group_id, title, au moins une catégorie valide, season, ingredients et preparation sont requis",
       });
     }
 
@@ -63,7 +90,7 @@ const createRecipe = async (req, res) => {
         title,
         description,
         image_url,
-        category,
+        categoryList.join(","),
         season,
         Array.isArray(ingredients) ? ingredients.join("\n") : ingredients,
         Array.isArray(preparation) ? preparation.join("\n") : preparation,
@@ -95,10 +122,23 @@ const updateRecipe = async (req, res) => {
       preparation,
     } = req.body;
 
+    const categoryList = normalizeCategories(category);
+    const invalidCategory = categoryList.some(
+      (c) => !ALLOWED_CATEGORIES.includes(c)
+    );
+
     // validation minimale
-    if (!title || !category || !season || !ingredients || !preparation) {
+    if (
+      !title ||
+      categoryList.length === 0 ||
+      invalidCategory ||
+      !season ||
+      !ingredients ||
+      !preparation
+    ) {
       return res.status(400).json({
-        error: "title, category, season, ingredients et preparation sont requis",
+        error:
+          "title, au moins une catégorie valide, season, ingredients et preparation sont requis",
       });
     }
 
@@ -110,7 +150,7 @@ const updateRecipe = async (req, res) => {
         title,
         description ?? null,
         image_url ?? null,
-        category,
+        categoryList.join(","),
         season,
         Array.isArray(ingredients) ? ingredients.join("\n") : ingredients,
         Array.isArray(preparation) ? preparation.join("\n") : preparation,

@@ -33,7 +33,7 @@ CREATE TABLE recipes (
   description TEXT,
   image_url VARCHAR(500),
 
-  category ENUM('viande', 'végé', 'féculent', 'dessert') NOT NULL,
+ category VARCHAR(150) NOT NULL,
   season ENUM('Été', 'Hiver') NOT NULL,
 
   ingredients TEXT NOT NULL,     -- un ingrédient par ligne
@@ -125,7 +125,7 @@ VALUES
   'Pappardelle au bœuf braisé',
   'Des côtes de bœuf mijotées lentement dans un Barolo, effilochées et mélangées à des pappardelles fraîches.',
   'https://images.unsplash.com/photo-1484325881845-65073528922e?w=900&h=600&fit=crop&auto=format',
-  'viande', 'Hiver',
+  'viande,féculent', 'Hiver',
   '800 g de côtes de bœuf
 400 g de pappardelles
 1 bouteille de Barolo
@@ -149,7 +149,7 @@ Cuire les pappardelles puis les mélanger avec la sauce au bœuf.'
   'Spaghetti al Pomodoro',
   'Quatre ingrédients, quinze minutes de cuisson active. L''idéal platonicien d''une sauce tomate.',
   'https://images.unsplash.com/photo-1713561058969-793049b01712?w=900&h=600&fit=crop&auto=format',
-  'féculent', 'Été',
+  'féculent,végé', 'Été',
   '200 g de spaghetti
 400 g de tomates concassées
 2 gousses d''ail
@@ -212,7 +212,7 @@ Laisser reposer quelques minutes avant de découper.'
   'Risotto crémeux aux champignons',
   'Un risotto italien onctueux aux champignons et au parmesan.',
   'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=900&h=600&fit=crop&auto=format',
-  'féculent', 'Automne',
+  'féculent,végé', 'Hiver',
   '300 g de riz arborio
 300 g de champignons
 1 oignon

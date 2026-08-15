@@ -154,6 +154,7 @@
 
 .recipe-detail__badges {
   display: flex;
+  flex-wrap: wrap;   /* ← ajouté */
   gap: 8px;
 }
 
