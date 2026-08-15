@@ -1,44 +1,200 @@
+/* =========================================================
+   ADD RECIPE — DESIGN FIGMA
+   ========================================================= */
+
+.add-recipe {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 32px 80px;
+  color: #4A4038;
+  font-family: 'Outfit', system-ui, sans-serif;
+}
+
+/* =========================
+   RETOUR
+   ========================= */
+
+.add-recipe__back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 0 0 28px;
+  padding: 0;
+
+  background: none;
+  border: none;
+
+  color: #65A8D0;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+
+  cursor: pointer;
+}
+
+.add-recipe__back:hover {
+  color: #4F8FB8;
+}
+
+/* =========================
+   TITRE
+   ========================= */
+
+.add-recipe__title {
+  margin: 0 0 6px;
+
+  color: #4A4038;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.add-recipe__subtitle {
+  margin: 0 0 36px;
+
+  color: #9A8A7C;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* =========================
+   FORM
+   ========================= */
+
+.add-recipe__form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.add-recipe__field {
+  width: 100%;
+}
+
+/* =========================
+   LABELS
+   ========================= */
+
+.add-recipe__label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #9A8A7C;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+/* =========================
+   INPUTS / TEXTAREAS
+   ========================= */
+
+.add-recipe__input,
+.add-recipe__textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 10px 13px;
+
+  background: #FFFFFF;
+  border: 1px solid #E8E0D5;
+  border-radius: 8px;
+
+  color: #4A4038;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 14px;
+
+  outline: none;
+
+  transition: border-color 0.15s ease;
+}
+
+.add-recipe__input {
+  height: 42px;
+}
+
+.add-recipe__textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.add-recipe__input::placeholder,
+.add-recipe__textarea::placeholder {
+  color: #B8A898;
+}
+
+.add-recipe__input:focus,
+.add-recipe__textarea:focus {
+  border-color: #65A8D0;
+}
+
+.add-recipe__input:hover,
+.add-recipe__textarea:hover {
+  border-color: #D6CABC;
+}
+
+/* =========================
+   IMAGE
+   ========================= */
+
 .add-recipe__image-row {
   display: flex;
-  gap: 14px;
   align-items: flex-start;
+  gap: 12px;
 }
 
 .add-recipe__image-dropzone {
   position: relative;
-  width: 130px;
-  height: 100px;
+
+  width: 120px;
+  height: 90px;
+
   flex-shrink: 0;
 
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  gap: 6px;
 
-  background: #f2ede6;
-  border: 2px dashed #e8e0d5;
+  background: #F2EDE6;
+  border: 2px dashed #E8E0D5;
   border-radius: 8px;
 
   overflow: hidden;
   cursor: pointer;
+
   transition: border-color 0.15s ease;
 }
 
 .add-recipe__image-dropzone:hover {
-  border-color: #7fb5d1;
+  border-color: #65A8D0;
 }
 
 .add-recipe__image-placeholder {
-  font-size: 11px;
-  line-height: 1.6;
+  color: #9A8A7C;
+  font-size: 10px;
+  line-height: 1.5;
   text-align: center;
-  color: #9a8a7c;
+  letter-spacing: 0.04em;
 }
 
 .add-recipe__image-preview {
+  display: block;
+
   width: 100%;
   height: 100%;
+
   object-fit: cover;
-  display: block;
 }
 
 .add-recipe__image-overlay {
@@ -50,8 +206,8 @@
   justify-content: center;
 
   background: rgba(74, 64, 56, 0.55);
-  color: #ffffff;
-  font-family: 'Outfit', sans-serif;
+
+  color: #FFFFFF;
   font-size: 12px;
   font-weight: 500;
 }
@@ -62,6 +218,15 @@
 
 .add-recipe__image-info {
   flex: 1;
+  min-width: 0;
+}
+
+.add-recipe__hint {
+  margin: 0;
+
+  color: #9A8A7C;
+  font-size: 11px;
+  line-height: 1.5;
 }
 
 .add-recipe__image-remove {
@@ -71,14 +236,189 @@
   background: none;
   border: none;
 
-  font-family: 'Outfit', sans-serif;
+  color: #65A8D0;
+  font-family: 'Outfit', system-ui, sans-serif;
   font-size: 12px;
   font-weight: 500;
-  color: #65a8d0;
 
   cursor: pointer;
 }
 
 .add-recipe__image-remove:hover {
-  color: #4f8fb8;
+  color: #4F8FB8;
+}
+
+/* =========================
+   HINTS
+   ========================= */
+
+.add-recipe__field > .add-recipe__hint {
+  margin-top: 5px;
+
+  color: #B8A898;
+  font-size: 11px;
+}
+
+/* =========================
+   TOGGLE SAISON / CATEGORIE
+   ========================= */
+
+.add-recipe__toggle-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.add-recipe__toggle {
+  flex: 1;
+
+  min-height: 38px;
+  padding: 9px 12px;
+
+  background: #FFFFFF;
+  border: 1.5px solid #E8E0D5;
+  border-radius: 8px;
+
+  color: #9A8A7C;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.add-recipe__toggle:hover {
+  border-color: #9CC5DE;
+}
+
+.add-recipe__toggle--active {
+  background: #EAF4FA;
+  border-color: #65A8D0;
+  color: #65A8D0;
+  font-weight: 600;
+}
+
+/* =========================
+   ERREURS
+   ========================= */
+
+.add-recipe__error {
+  margin: -6px 0 0;
+
+  color: #C6533A;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* =========================
+   BOUTON AJOUTER
+   ========================= */
+
+.add-recipe__submit {
+  align-self: flex-start;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 13px 28px;
+
+  background: #FC6532;
+  border: none;
+  border-radius: 8px;
+
+  box-shadow: 0 2px 8px rgba(252, 101, 50, 0.28);
+
+  color: #FFFFFF;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.add-recipe__submit:hover:not(:disabled) {
+  background: #E95628;
+  box-shadow: 0 4px 12px rgba(252, 101, 50, 0.32);
+  transform: translateY(-1px);
+}
+
+.add-recipe__submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.add-recipe__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .add-recipe {
+    padding: 24px 20px 60px;
+  }
+
+  .add-recipe__title {
+    font-size: 30px;
+  }
+
+  .add-recipe__subtitle {
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .add-recipe {
+    padding: 20px 16px 50px;
+  }
+
+  .add-recipe__title {
+    font-size: 28px;
+  }
+
+  .add-recipe__form {
+    gap: 20px;
+  }
+
+  /*
+   * Sur petit écran, l'image et son texte
+   * passent l'un sous l'autre.
+   */
+  .add-recipe__image-row {
+    flex-direction: column;
+  }
+
+  .add-recipe__image-dropzone {
+    width: 120px;
+    height: 90px;
+  }
+
+  .add-recipe__image-info {
+    width: 100%;
+  }
+
+  /*
+   * Les boutons de catégories prennent
+   * environ la moitié de la largeur.
+   */
+  .add-recipe__toggle {
+    flex: 1 1 calc(50% - 4px);
+  }
+
+  .add-recipe__submit {
+    width: 100%;
+  }
 }

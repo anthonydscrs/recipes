@@ -49,10 +49,12 @@ function FilterBar({
             <span className="filter-bar__label">Saison</span>
             <div className="filter-bar__pills">
               <FilterPill label="Toutes" active={season === 'Tous'} onClick={() => setSeason('Tous')} />
-              <FilterPill label="☀︎ Été" active={season === 'Été'} onClick={() => setSeason('Été')} />
-              <FilterPill label="❄ Hiver" active={season === 'Hiver'} onClick={() => setSeason('Hiver')} />
+              <FilterPill label="☀️ Été" active={season === 'Été'} onClick={() => setSeason('Été')} />
+              <FilterPill label=" ❄️ Hiver" active={season === 'Hiver'} onClick={() => setSeason('Hiver')} />
             </div>
           </div>
+
+
 
           <div className="filter-bar__divider" />
 
