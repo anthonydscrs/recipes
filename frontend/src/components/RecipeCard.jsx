@@ -9,10 +9,15 @@ function RecipeCard({ recipe, onClick, onToggleFavorite }) {
 
         <div className="recipe-card__badges">
           <span className={`recipe-badge ${recipe.season === 'Été' ? 'recipe-badge--summer' : 'recipe-badge--winter'}`}>
-            {recipe.season === 'Été' ? '☀︎ Été' : '❄ Hiver'}
+            {recipe.season === 'Été' ? '☀️ Été' : '❄️ Hiver'}
           </span>
           <span className={`recipe-badge recipe-badge--${recipe.category}`}>
-            {recipe.category}
+            {{
+  viande: '🥩 Viande',
+  'végé': '🥦 Végé',
+  'féculent': '🌾 Féculent',
+  dessert: '🍰 Dessert',
+}[recipe.category]}
           </span>
         </div>
 

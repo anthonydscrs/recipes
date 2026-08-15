@@ -31,13 +31,18 @@ function RecipeDetail({ recipe, onBack }) {
                   : 'recipe-detail__badge--winter'
               }`}
             >
-              {recipe.season === 'Été' ? '☀︎ Été' : '❄ Hiver'}
+              {recipe.season === 'Été' ? '☀️ Été' : '❄️ Hiver'}
             </span>
 
             <span
               className={`recipe-detail__badge recipe-detail__badge--${recipe.category}`}
             >
-              {recipe.category}
+              {{
+  viande: '🥩 Viande',
+  'végé': '🥦 Végé',
+  'féculent': '🌾 Féculent',
+  dessert: '🍰 Dessert',
+}[recipe.category]}
             </span>
           </div>
 
