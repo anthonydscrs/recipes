@@ -5,9 +5,11 @@ import RecipeDetail from './pages/RecipeDetail'
 import AddRecipe from './pages/AddRecipe'
 import EditRecipe from './pages/EditRecipe'
 import FilterBar from './components/FilterBar'
+import ShoppingList from './pages/ShoppingList'
 import { useRecipeFilters } from './hooks/useRecipeFilters'
 
 function App() {
+  const [tab, setTab] = useState('recettes')
   const [recipes, setRecipes] = useState([])
   const [favoriteIds, setFavoriteIds] = useState(new Set()) // TODO: brancher sur le backend une fois l'auth prête
   const [selectedRecipe, setSelectedRecipe] = useState(null)
@@ -27,6 +29,15 @@ function App() {
       .finally(() => setLoading(false))
   }, [])
 
+  // Changer d'onglet depuis le header referme toute vue recette en cours
+  // (ajout / édition / détail), pour ne pas rester coincé dessus.
+  const handleSetTab = (next) => {
+    setAddingRecipe(false)
+    setEditingRecipe(null)
+    setSelectedRecipe(null)
+    setTab(next)
+  }
+
   const toggleFavorite = (id) => {
     setFavoriteIds((prev) => {
       const next = new Set(prev)
@@ -41,7 +52,7 @@ function App() {
   if (addingRecipe) {
     return (
       <>
-        <Header />
+        <Header tab={tab} setTab={handleSetTab} />
         <AddRecipe
           onBack={() => setAddingRecipe(false)}
           onCreated={(created) => {
@@ -56,7 +67,7 @@ function App() {
   if (editingRecipe) {
     return (
       <>
-        <Header />
+        <Header tab={tab} setTab={handleSetTab} />
         <EditRecipe
           recipe={editingRecipe}
           onBack={() => setEditingRecipe(null)}
@@ -76,7 +87,7 @@ function App() {
     const recipe = recipesWithFavorite.find((r) => r.id === selectedRecipe.id) ?? selectedRecipe
     return (
       <>
-        <Header />
+        <Header tab={tab} setTab={handleSetTab} />
         <RecipeDetail
           recipe={recipe}
           onBack={() => setSelectedRecipe(null)}
@@ -93,27 +104,34 @@ function App() {
 
   return (
     <>
-      <Header />
-      {loading && <p style={{ padding: 32 }}>Chargement…</p>}
-      {error && <p style={{ padding: 32, color: 'red' }}>{error}</p>}
+      <Header tab={tab} setTab={handleSetTab} />
 
-      {!loading && !error && (
-        <main className="recipes-page">
-          <FilterBar {...filters} />
-          <div className="recipes-header">
-            <p className="recipes-count">
-              {filters.filtered.length} recette{filters.filtered.length !== 1 ? 's' : ''}
-            </p>
-            <button className="add-recipe-btn" onClick={() => setAddingRecipe(true)}>
-              + Ajouter une recette
-            </button>
-          </div>
-          <div className="recipes-grid">
-            {filters.filtered.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} onClick={setSelectedRecipe} onToggleFavorite={() => toggleFavorite(recipe.id)} />
-            ))}
-          </div>
-        </main>
+      {tab === 'courses' ? (
+        <ShoppingList />
+      ) : (
+        <>
+          {loading && <p style={{ padding: 32 }}>Chargement…</p>}
+          {error && <p style={{ padding: 32, color: 'red' }}>{error}</p>}
+
+          {!loading && !error && (
+            <main className="recipes-page">
+              <FilterBar {...filters} />
+              <div className="recipes-header">
+                <p className="recipes-count">
+                  {filters.filtered.length} recette{filters.filtered.length !== 1 ? 's' : ''}
+                </p>
+                <button className="add-recipe-btn" onClick={() => setAddingRecipe(true)}>
+                  + Ajouter une recette
+                </button>
+              </div>
+              <div className="recipes-grid">
+                {filters.filtered.map((recipe) => (
+                  <RecipeCard key={recipe.id} recipe={recipe} onClick={setSelectedRecipe} onToggleFavorite={() => toggleFavorite(recipe.id)} />
+                ))}
+              </div>
+            </main>
+          )}
+        </>
       )}
     </>
   )

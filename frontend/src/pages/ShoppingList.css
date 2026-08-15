@@ -1,0 +1,247 @@
+.shopping-page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+}
+
+.shopping-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.shopping-title {
+  margin: 0;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: #4a3327;
+}
+
+.shopping-clear-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  background: #ffffff;
+  border: 1px solid #e6ded5;
+  border-radius: 8px;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #a83b3b;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.shopping-clear-btn:hover:not(:disabled) {
+  background: #f6e7e7;
+  border-color: #a83b3b;
+}
+
+.shopping-clear-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.shopping-clear-btn__icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.shopping-add {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.shopping-add input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #E8E0D5;
+  border-radius: 8px;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 14px;
+}
+
+.shopping-add button {
+  padding: 10px 18px;
+  background: #7FB5D1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.shopping-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.shopping-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid #E8E0D5;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.shopping-item label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #4A4038;
+}
+
+.shopping-item--checked label {
+  text-decoration: line-through;
+  color: #B8A898;
+}
+
+.shopping-item__delete {
+  background: none;
+  border: none;
+  color: #B8A898;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.shopping-empty {
+  color: #B8A898;
+  font-size: 13px;
+}
+
+/* =========================
+   CONFIRMATION "TOUT SUPPRIMER"
+   (identique à .recipe-detail__confirm-* de RecipeDetail.css)
+========================= */
+
+.shopping-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(74, 64, 56, 0.45);
+}
+
+.shopping-confirm-box {
+  width: 100%;
+  max-width: 380px;
+
+  padding: 24px;
+
+  background: #ffffff;
+  border-radius: 14px;
+
+  box-shadow: 0 10px 30px rgba(80, 60, 40, 0.2);
+}
+
+.shopping-confirm-text {
+  margin: 0 0 18px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+
+  color: #4a4038;
+}
+
+.shopping-confirm-error {
+  margin: -8px 0 16px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  color: #c6533a;
+}
+
+.shopping-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.shopping-confirm-cancel {
+  padding: 9px 16px;
+
+  background: #ffffff;
+  border: 1px solid #e6ded5;
+  border-radius: 8px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #9a8a7c;
+
+  cursor: pointer;
+}
+
+.shopping-confirm-cancel:hover:not(:disabled) {
+  border-color: #d6cabc;
+}
+
+.shopping-confirm-delete {
+  padding: 9px 16px;
+
+  background: #a83b3b;
+  border: none;
+  border-radius: 8px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+
+  cursor: pointer;
+
+  transition: background-color 0.15s ease;
+}
+
+.shopping-confirm-delete:hover:not(:disabled) {
+  background: #8f3131;
+}
+
+.shopping-confirm-cancel:disabled,
+.shopping-confirm-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================
+   MOBILE : "Tout supprimer" en icône seule, ronde
+========================= */
+
+@media (max-width: 600px) {
+  .shopping-page {
+    padding: 24px 18px 60px;
+  }
+
+  .shopping-title {
+    font-size: 22px;
+  }
+
+  .shopping-clear-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .shopping-clear-btn__label {
+    display: none;
+  }
+}

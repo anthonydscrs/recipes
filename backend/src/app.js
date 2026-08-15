@@ -4,6 +4,7 @@ const path = require("path");
 const recipesRouter = require("./routes/recipesRoutes");
 const favoritesRouter = require("./routes/favoritesRoutes");
 const uploadRouter = require("./routes/uploadRoutes");
+const shoppingListRouter = require("./routes/shoppingListRoutes");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 app.use("/api/recipes", recipesRouter);
 app.use("/api/favorites", favoritesRouter);
 app.use("/api/upload", uploadRouter);
+app.use("/api/shopping-list", shoppingListRouter);
 
 // Gestion d'erreurs dédiée à l'upload (fichier trop lourd, mauvais format…)
 // renvoyée en JSON plutôt qu'en page HTML brute

@@ -3,6 +3,10 @@ import HeartBtn from '../components/HeartBtn'
 import StarRating from '../components/StarRating'
 import './RecipeDetail.css'
 
+// TODO: group_id/added_by en dur en attendant l'auth (même logique que ShoppingList.jsx)
+const GROUP_ID = 1
+const USER_ID = 1
+
 function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
   const [activeTab, setActiveTab] = useState('ingredients')
   const [isFavorite, setIsFavorite] = useState(false)
@@ -11,6 +15,9 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState(null)
+
+  const [addingToList, setAddingToList] = useState(false)
+  const [addedToList, setAddedToList] = useState(false)
 
   const handleDelete = async () => {
     setDeleting(true)
@@ -34,6 +41,42 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
       setDeleteError(err.message)
       setDeleting(false)
     }
+  }
+
+  const handleAddToShoppingList = async () => {
+    setAddingToList(true)
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/shopping-list/from-recipe`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            group_id: GROUP_ID,
+            added_by: USER_ID,
+            recipe_id: recipe.id,
+          }),
+        }
+      )
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error || "Erreur lors de l'ajout aux courses")
+      }
+
+      setAddedToList(true)
+      setTimeout(() => setAddedToList(false), 2000)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setAddingToList(false)
+    }
+  }
+
+  const handleAddToPlanning = () => {
+    // TODO: brancher une fois la fonctionnalité "Planning" développée (table + backend)
+    alert('Bientôt disponible : ajout au planning 🙂')
   }
 
   return (
@@ -113,6 +156,21 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
 
             <div className="recipe-detail__actions-mobile">
               <button
+                className="recipe-detail__icon-btn recipe-detail__icon-btn--cart"
+                onClick={handleAddToShoppingList}
+                disabled={addingToList}
+                aria-label="Ajouter les ingrédients aux courses"
+              >
+                {addedToList ? '✅' : '🛒'}
+              </button>
+              <button
+                className="recipe-detail__icon-btn recipe-detail__icon-btn--planning"
+                onClick={handleAddToPlanning}
+                aria-label="Ajouter au planning"
+              >
+                📅
+              </button>
+              <button
                 className="recipe-detail__icon-btn recipe-detail__icon-btn--edit"
                 onClick={() => onEdit(recipe)}
                 aria-label="Modifier la recette"
@@ -155,6 +213,29 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
 
           {/* ACTIONS SOUS LA PHOTO (visible seulement sur PC) */}
           <div className="recipe-detail__footer-actions">
+
+            <button
+              className="recipe-detail__action recipe-detail__action--cart"
+              onClick={handleAddToShoppingList}
+              disabled={addingToList}
+            >
+              <span className="recipe-detail__action-icon">🛒</span>
+              <span>
+                {addingToList
+                  ? 'Ajout…'
+                  : addedToList
+                    ? 'Ajouté !'
+                    : 'Ajouter les ingrédients aux courses'}
+              </span>
+            </button>
+
+            <button
+              className="recipe-detail__action recipe-detail__action--planning"
+              onClick={handleAddToPlanning}
+            >
+              <span className="recipe-detail__action-icon">📅</span>
+              <span>Ajouter au planning</span>
+            </button>
 
             <button
               className="recipe-detail__action recipe-detail__action--edit"

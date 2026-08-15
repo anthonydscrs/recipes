@@ -243,6 +243,28 @@
   border-color: #a83b3b;
 }
 
+
+.recipe-detail__icon-btn--cart {
+  background: #4a9b6e;
+  border-color: #4a9b6e;
+  color: #ffffff;
+}
+
+.recipe-detail__icon-btn--cart:hover:not(:disabled) {
+  background: #3f8760;
+  border-color: #3f8760;
+}
+
+.recipe-detail__icon-btn--cart:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.recipe-detail__icon-btn--planning:hover {
+  background: #eaf4fa;
+  border-color: #65a8d0;
+}
+
 /* =========================
    TITRE
 ========================= */
