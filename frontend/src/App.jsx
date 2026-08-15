@@ -3,6 +3,7 @@ import Header from './components/Header'
 import RecipeCard from './components/RecipeCard'
 import RecipeDetail from './pages/RecipeDetail'
 import AddRecipe from './pages/AddRecipe'
+import EditRecipe from './pages/EditRecipe'
 import FilterBar from './components/FilterBar'
 import { useRecipeFilters } from './hooks/useRecipeFilters'
 
@@ -11,6 +12,7 @@ function App() {
   const [favoriteIds, setFavoriteIds] = useState(new Set()) // TODO: brancher sur le backend une fois l'auth prête
   const [selectedRecipe, setSelectedRecipe] = useState(null)
   const [addingRecipe, setAddingRecipe] = useState(false)
+  const [editingRecipe, setEditingRecipe] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -51,12 +53,40 @@ function App() {
     )
   }
 
+  if (editingRecipe) {
+    return (
+      <>
+        <Header />
+        <EditRecipe
+          recipe={editingRecipe}
+          onBack={() => setEditingRecipe(null)}
+          onUpdated={(updated) => {
+            setRecipes((prev) =>
+              prev.map((r) => (r.id === updated.id ? updated : r))
+            )
+            setSelectedRecipe(updated)
+            setEditingRecipe(null)
+          }}
+        />
+      </>
+    )
+  }
+
   if (selectedRecipe) {
     const recipe = recipesWithFavorite.find((r) => r.id === selectedRecipe.id) ?? selectedRecipe
     return (
       <>
         <Header />
-        <RecipeDetail recipe={recipe} onBack={() => setSelectedRecipe(null)} onToggleFavorite={() => toggleFavorite(recipe.id)} />
+        <RecipeDetail
+          recipe={recipe}
+          onBack={() => setSelectedRecipe(null)}
+          onToggleFavorite={() => toggleFavorite(recipe.id)}
+          onEdit={(r) => setEditingRecipe(r)}
+          onDeleted={(id) => {
+            setRecipes((prev) => prev.filter((r) => r.id !== id))
+            setSelectedRecipe(null)
+          }}
+        />
       </>
     )
   }
