@@ -29,6 +29,106 @@
 }
 
 /* =========================
+   CONFIRMATION SUPPRESSION
+========================= */
+
+.recipe-detail__confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(74, 64, 56, 0.45);
+}
+
+.recipe-detail__confirm-box {
+  width: 100%;
+  max-width: 380px;
+
+  padding: 24px;
+
+  background: #ffffff;
+  border-radius: 14px;
+
+  box-shadow: 0 10px 30px rgba(80, 60, 40, 0.2);
+}
+
+.recipe-detail__confirm-text {
+  margin: 0 0 18px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+
+  color: #4a4038;
+}
+
+.recipe-detail__confirm-error {
+  margin: -8px 0 16px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  color: #c6533a;
+}
+
+.recipe-detail__confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.recipe-detail__confirm-cancel {
+  padding: 9px 16px;
+
+  background: #ffffff;
+  border: 1px solid #e6ded5;
+  border-radius: 8px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #9a8a7c;
+
+  cursor: pointer;
+}
+
+.recipe-detail__confirm-cancel:hover:not(:disabled) {
+  border-color: #d6cabc;
+}
+
+.recipe-detail__confirm-delete {
+  padding: 9px 16px;
+
+  background: #a83b3b;
+  border: none;
+  border-radius: 8px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+
+  cursor: pointer;
+
+  transition: background-color 0.15s ease;
+}
+
+.recipe-detail__confirm-delete:hover:not(:disabled) {
+  background: #8f3131;
+}
+
+.recipe-detail__confirm-cancel:disabled,
+.recipe-detail__confirm-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================
    LAYOUT
 ========================= */
 
@@ -40,13 +140,21 @@
 }
 
 /* =========================
-   BADGES
+   LIGNE BADGES (+ actions mobile)
 ========================= */
+
+.recipe-detail__badges-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 18px;
+}
 
 .recipe-detail__badges {
   display: flex;
   gap: 8px;
-  margin-bottom: 18px;
 }
 
 .recipe-detail__badge {
@@ -90,6 +198,49 @@
 .recipe-detail__badge--dessert {
   background: #f3e4ef;
   color: #a25b91;
+}
+
+/* =========================
+   ACTIONS MOBILE (icônes, à côté des badges)
+   Cachées sur PC, visibles seulement en mobile (media query plus bas)
+========================= */
+
+.recipe-detail__actions-mobile {
+  display: none;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.recipe-detail__icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 50%;
+  border: 1px solid #e6ded5;
+  background: #ffffff;
+
+  font-size: 14px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.recipe-detail__icon-btn--edit:hover {
+  background: #eaf4fa;
+  border-color: #65a8d0;
+}
+
+.recipe-detail__icon-btn--delete:hover {
+  background: #f6e7e7;
+  border-color: #a83b3b;
 }
 
 /* =========================
@@ -173,6 +324,61 @@
 
   object-fit: cover;
   border-radius: 11px;
+}
+
+/* =========================
+   ACTIONS SOUS LA PHOTO (PC uniquement)
+   plus tard : Ajouter aux courses / Ajouter au planning
+========================= */
+
+.recipe-detail__footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-top: 18px;
+}
+
+.recipe-detail__action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 11px 18px;
+
+  border-radius: 9px;
+  border: 1px solid #e6ded5;
+  background: #ffffff;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #4a4038;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.recipe-detail__action-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.recipe-detail__action--edit:hover {
+  background: #eaf4fa;
+  border-color: #65a8d0;
+  color: #65a8d0;
+}
+
+.recipe-detail__action--delete:hover {
+  background: #f6e7e7;
+  border-color: #a83b3b;
+  color: #a83b3b;
 }
 
 /* =========================
@@ -395,7 +601,7 @@
   }
 
   .recipe-detail__image {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 9;
     border-radius: 9px;
   }
 
@@ -413,6 +619,16 @@
 
   .recipe-detail__step {
     gap: 12px;
+  }
+
+  /* On affiche les icônes Modifier/Supprimer à côté des badges… */
+  .recipe-detail__actions-mobile {
+    display: flex;
+  }
+
+  /* …et on masque la version texte sous la photo */
+  .recipe-detail__footer-actions {
+    display: none;
   }
 }
 
@@ -450,5 +666,9 @@
 
   .recipe-detail__step {
     padding: 12px 0;
+  }
+
+  .recipe-detail__badges-row {
+    flex-wrap: wrap;
   }
 }
