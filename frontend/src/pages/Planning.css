@@ -1,0 +1,606 @@
+.planning-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+}
+
+.planning-title {
+  margin: 0 0 8px;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: #4a3327;
+}
+
+.planning-subtitle {
+  margin: 0;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 13px;
+  color: #9a8a7c;
+}
+
+.planning-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.planning-clear-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  background: #ffffff;
+  border: 1px solid #e6ded5;
+  border-radius: 8px;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #a83b3b;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.planning-clear-btn:hover:not(:disabled) {
+  background: #f6e7e7;
+  border-color: #a83b3b;
+}
+
+.planning-clear-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.planning-clear-btn__icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.planning-confirm-error {
+  margin: -8px 0 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  color: #c6533a;
+}
+
+
+/* =========================
+   GRILLE DU PLANNING
+========================= */
+
+.planning-grid-wrapper {
+  overflow-x: auto;
+  background: #fff;
+  border: 1px solid #e6ded5;
+  border-radius: 14px;
+}
+
+.planning-grid-wrapper--mobile {
+  display: none;
+}
+
+.planning-grid {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+.planning-grid__corner {
+  width: 130px;
+  background: #f7f1e8;
+  border-bottom: 1px solid #e6ded5;
+}
+
+.planning-grid__day-head {
+  padding: 14px 8px;
+  background: #f7f1e8;
+  border-bottom: 1px solid #e6ded5;
+  border-left: 1px solid #e6ded5;
+
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #9a8a7c;
+  text-align: center;
+}
+
+.planning-grid__meal-head {
+  padding: 14px 16px;
+  border-right: 1px solid #e6ded5;
+  border-bottom: 1px solid #e6ded5;
+
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #7a6a5c;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.planning-grid tbody tr:last-child .planning-grid__meal-head,
+.planning-grid tbody tr:last-child .planning-grid__cell {
+  border-bottom: none;
+}
+
+.planning-grid__cell {
+  padding: 8px;
+  border-left: 1px solid #e6ded5;
+  border-bottom: 1px solid #e6ded5;
+  vertical-align: middle;
+}
+
+
+/* =========================
+   CRÉNEAUX
+========================= */
+
+.planning-slot {
+  width: 100%;
+  min-height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+
+  cursor: pointer;
+  font-family: 'Outfit', system-ui, sans-serif;
+}
+
+.planning-slot--empty {
+  color: #c9bcae;
+  font-size: 18px;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.planning-slot--empty:hover {
+  background: #f7f1e8;
+  color: #7FB5D1;
+}
+
+.planning-slot--filled {
+  position: relative;
+  gap: 8px;
+  padding: 8px;
+  background: #f7f1e8;
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.planning-slot__image {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.planning-slot__title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #4a4038;
+  line-height: 1.3;
+}
+
+.planning-slot__remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+
+  width: 16px;
+  height: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: rgba(74, 64, 56, 0.08);
+
+  font-size: 9px;
+  color: #9a8a7c;
+}
+
+.planning-slot__remove:hover {
+  background: #a83b3b;
+  color: #fff;
+}
+
+
+/* =========================
+   SÉLECTEUR DE RECETTE
+========================= */
+
+.planning-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(74, 64, 56, 0.45);
+}
+
+.planning-picker-box {
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(80, 60, 40, 0.2);
+  overflow: hidden;
+}
+
+
+/* =========================
+   HEADER DE LA MODALE
+========================= */
+
+.planning-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 16px 18px;
+
+  border-bottom: 1px solid #e6ded5;
+}
+
+.planning-picker-header p {
+  margin: 0;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a3327;
+}
+
+.planning-picker-close {
+  background: none;
+  border: none;
+
+  color: #9a8a7c;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.planning-picker-close:hover {
+  color: #4a4038;
+}
+
+
+/* =========================
+   FILTRES DANS LA MODALE
+========================= */
+
+.planning-picker-filters {
+  padding: 12px 18px;
+
+  border-bottom: 1px solid #e6ded5;
+}
+
+/*
+  Le FilterBar est utilisé ici dans un espace
+  beaucoup plus petit que sur la page principale.
+*/
+
+.planning-picker-filters .filter-bar {
+  width: 100%;
+}
+
+.planning-picker-filters .filter-bar__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  width: 100%;
+}
+
+/* La recherche prend tout l'espace disponible */
+
+.planning-picker-filters .search-bar {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Favoris et Filtres restent à leur taille naturelle */
+
+.planning-picker-filters .filter-bar__fav-btn,
+.planning-picker-filters .filter-bar__toggle {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Panneau ouvert */
+
+.planning-picker-filters .filter-bar__panel {
+  margin-top: 10px;
+  padding: 12px 0 2px;
+}
+
+/* Ligne Saison / Catégorie */
+
+.planning-picker-filters .filter-bar__filter-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* Label Saison / Catégorie */
+
+.planning-picker-filters .filter-bar__label {
+  flex-shrink: 0;
+  min-width: 65px;
+  padding-top: 6px;
+}
+
+/* Les boutons peuvent passer à la ligne */
+
+.planning-picker-filters .filter-bar__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+
+/* =========================
+   LISTE DES RECETTES
+========================= */
+
+.planning-picker-list {
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.planning-picker-item {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 8px;
+  margin-bottom: 4px;
+
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+
+  text-align: left;
+  cursor: pointer;
+
+  transition: background-color 0.15s ease;
+}
+
+.planning-picker-item:hover {
+  background: #f7f1e8;
+}
+
+.planning-picker-item img {
+  width: 40px;
+  height: 40px;
+
+  border-radius: 6px;
+
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.planning-picker-item span {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: #4a4038;
+}
+
+.planning-empty {
+  padding: 12px 8px;
+
+  color: #b8a898;
+  font-size: 13px;
+}
+
+
+/* =========================
+   CONFIRMATION DE SUPPRESSION
+========================= */
+
+.planning-confirm-box {
+  width: 100%;
+  max-width: 360px;
+
+  padding: 24px;
+
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(80, 60, 40, 0.2);
+}
+
+.planning-confirm-text {
+  margin: 0 0 18px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4a4038;
+}
+
+.planning-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.planning-confirm-cancel {
+  padding: 9px 16px;
+
+  background: #ffffff;
+  border: 1px solid #e6ded5;
+  border-radius: 8px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #9a8a7c;
+
+  cursor: pointer;
+}
+
+.planning-confirm-cancel:hover:not(:disabled) {
+  border-color: #d6cabc;
+}
+
+.planning-confirm-delete {
+  padding: 9px 16px;
+
+  background: #a83b3b;
+  border: none;
+  border-radius: 8px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+
+  cursor: pointer;
+
+  transition: background-color 0.15s ease;
+}
+
+.planning-confirm-delete:hover:not(:disabled) {
+  background: #8f3131;
+}
+
+.planning-confirm-cancel:disabled,
+.planning-confirm-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .planning-page {
+    padding: 24px 18px 60px;
+  }
+
+  .planning-title {
+    font-size: 22px;
+  }
+
+  .planning-grid-wrapper--desktop {
+    display: none;
+  }
+
+  .planning-grid-wrapper--mobile {
+    display: block;
+  }
+
+  .planning-grid--mobile {
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .planning-grid--mobile .planning-grid__corner {
+    width: 76px;
+  }
+
+  .planning-grid--mobile .planning-grid__day-head {
+    padding: 10px 6px;
+    font-size: 10px;
+  }
+
+  .planning-grid--mobile .planning-grid__meal-head {
+    padding: 10px 8px;
+    font-size: 11px;
+    white-space: normal;
+  }
+
+  .planning-grid--mobile .planning-slot--filled {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .planning-grid--mobile .planning-slot__image {
+    width: 100%;
+    height: 44px;
+  }
+
+  .planning-grid--mobile .planning-slot__title {
+    font-size: 11px;
+  }
+
+  .planning-clear-btn {
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .planning-clear-btn__label {
+    display: none;
+  }
+
+
+  /* =========================
+     FILTRES MODALE MOBILE
+  ========================= */
+
+  .planning-picker-filters {
+    padding: 10px 12px;
+  }
+
+  .planning-picker-filters .filter-bar__row {
+    gap: 6px;
+  }
+
+  .planning-picker-filters .search-bar {
+    min-width: 0;
+  }
+
+  .planning-picker-filters .filter-bar__fav-btn,
+  .planning-picker-filters .filter-bar__toggle {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  /*
+    Sur très petit écran, les filtres
+    passent proprement sous la recherche.
+  */
+
+  .planning-picker-filters .filter-bar__filter-row {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .planning-picker-filters .filter-bar__label {
+    padding-top: 0;
+  }
+
+}

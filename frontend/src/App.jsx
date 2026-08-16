@@ -6,7 +6,9 @@ import AddRecipe from './pages/AddRecipe'
 import EditRecipe from './pages/EditRecipe'
 import FilterBar from './components/FilterBar'
 import ShoppingList from './pages/ShoppingList'
+import Planning from './pages/Planning'
 import { useRecipeFilters } from './hooks/useRecipeFilters'
+import { usePagination } from './hooks/usePagination'
 
 function App() {
   const [tab, setTab] = useState('recettes')
@@ -21,7 +23,10 @@ function App() {
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/recipes`)
       .then((res) => {
-        if (!res.ok) throw new Error('Erreur lors du chargement des recettes')
+        if (!res.ok) {
+          throw new Error('Erreur lors du chargement des recettes')
+        }
+
         return res.json()
       })
       .then((data) => setRecipes(data))
@@ -41,18 +46,41 @@ function App() {
   const toggleFavorite = (id) => {
     setFavoriteIds((prev) => {
       const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
+
+      next.has(id)
+        ? next.delete(id)
+        : next.add(id)
+
       return next
     })
   }
 
-  const recipesWithFavorite = recipes.map((r) => ({ ...r, favorite: favoriteIds.has(r.id) }))
+  const recipesWithFavorite = recipes.map((r) => ({
+    ...r,
+    favorite: favoriteIds.has(r.id),
+  }))
+
+  // Filtres
   const filters = useRecipeFilters(recipesWithFavorite)
+
+  // Pagination : 12 recettes par page
+  const {
+    paginated,
+    currentPage,
+    totalPages,
+    goToPage,
+    nextPage,
+    previousPage,
+  } = usePagination(filters.filtered, 12)
 
   if (addingRecipe) {
     return (
       <>
-        <Header tab={tab} setTab={handleSetTab} />
+        <Header
+          tab={tab}
+          setTab={handleSetTab}
+        />
+
         <AddRecipe
           onBack={() => setAddingRecipe(false)}
           onCreated={(created) => {
@@ -67,14 +95,23 @@ function App() {
   if (editingRecipe) {
     return (
       <>
-        <Header tab={tab} setTab={handleSetTab} />
+        <Header
+          tab={tab}
+          setTab={handleSetTab}
+        />
+
         <EditRecipe
           recipe={editingRecipe}
           onBack={() => setEditingRecipe(null)}
           onUpdated={(updated) => {
             setRecipes((prev) =>
-              prev.map((r) => (r.id === updated.id ? updated : r))
+              prev.map((r) =>
+                r.id === updated.id
+                  ? updated
+                  : r
+              )
             )
+
             setSelectedRecipe(updated)
             setEditingRecipe(null)
           }}
@@ -84,17 +121,28 @@ function App() {
   }
 
   if (selectedRecipe) {
-    const recipe = recipesWithFavorite.find((r) => r.id === selectedRecipe.id) ?? selectedRecipe
+    const recipe =
+      recipesWithFavorite.find(
+        (r) => r.id === selectedRecipe.id
+      ) ?? selectedRecipe
+
     return (
       <>
-        <Header tab={tab} setTab={handleSetTab} />
+        <Header
+          tab={tab}
+          setTab={handleSetTab}
+        />
+
         <RecipeDetail
           recipe={recipe}
           onBack={() => setSelectedRecipe(null)}
           onToggleFavorite={() => toggleFavorite(recipe.id)}
           onEdit={(r) => setEditingRecipe(r)}
           onDeleted={(id) => {
-            setRecipes((prev) => prev.filter((r) => r.id !== id))
+            setRecipes((prev) =>
+              prev.filter((r) => r.id !== id)
+            )
+
             setSelectedRecipe(null)
           }}
         />
@@ -104,31 +152,117 @@ function App() {
 
   return (
     <>
-      <Header tab={tab} setTab={handleSetTab} />
+      <Header
+        tab={tab}
+        setTab={handleSetTab}
+      />
 
       {tab === 'courses' ? (
         <ShoppingList />
+      ) : tab === 'planning' ? (
+        <Planning
+          recipes={recipesWithFavorite}
+          onSelectRecipe={setSelectedRecipe}
+        />
       ) : (
         <>
-          {loading && <p style={{ padding: 32 }}>Chargement…</p>}
-          {error && <p style={{ padding: 32, color: 'red' }}>{error}</p>}
+          {loading && (
+            <p style={{ padding: 32 }}>
+              Chargement…
+            </p>
+          )}
+
+          {error && (
+            <p style={{ padding: 32, color: 'red' }}>
+              {error}
+            </p>
+          )}
 
           {!loading && !error && (
             <main className="recipes-page">
+
               <FilterBar {...filters} />
+
               <div className="recipes-header">
+
                 <p className="recipes-count">
-                  {filters.filtered.length} recette{filters.filtered.length !== 1 ? 's' : ''}
+                  {filters.filtered.length} recette
+                  {filters.filtered.length !== 1 ? 's' : ''}
                 </p>
-                <button className="add-recipe-btn" onClick={() => setAddingRecipe(true)}>
+
+                <button
+                  className="add-recipe-btn"
+                  onClick={() => setAddingRecipe(true)}
+                >
                   + Ajouter une recette
                 </button>
+
               </div>
+
               <div className="recipes-grid">
-                {filters.filtered.map((recipe) => (
-                  <RecipeCard key={recipe.id} recipe={recipe} onClick={setSelectedRecipe} onToggleFavorite={() => toggleFavorite(recipe.id)} />
+
+                {paginated.map((recipe) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    recipe={recipe}
+                    onClick={setSelectedRecipe}
+                    onToggleFavorite={() =>
+                      toggleFavorite(recipe.id)
+                    }
+                  />
                 ))}
+
               </div>
+
+              {totalPages > 1 && (
+                <div className="recipes-pagination">
+
+                  <button
+                    className="recipes-pagination__arrow"
+                    onClick={previousPage}
+                    disabled={currentPage === 1}
+                    aria-label="Page précédente"
+                  >
+                    ←
+                  </button>
+
+                  <div className="recipes-pagination__pages">
+
+                    {Array.from(
+                      { length: totalPages },
+                      (_, index) => {
+                        const page = index + 1
+
+                        return (
+                          <button
+                            key={page}
+                            className={`recipes-pagination__page ${
+                              currentPage === page
+                                ? 'recipes-pagination__page--active'
+                                : ''
+                            }`}
+                            onClick={() => goToPage(page)}
+                          >
+                            {page}
+                          </button>
+                        )
+                      }
+                    )}
+
+                  </div>
+
+                  <button
+                    className="recipes-pagination__arrow"
+                    onClick={nextPage}
+                    disabled={currentPage === totalPages}
+                    aria-label="Page suivante"
+                  >
+                    →
+                  </button>
+
+                </div>
+              )}
+
             </main>
           )}
         </>
