@@ -11,11 +11,9 @@ function ShoppingList() {
   const [clearing, setClearing] = useState(false)
   const [clearError, setClearError] = useState(null)
 
-  /*
-   * =========================
-   * AUTH
-   * =========================
-   */
+  /* =========================
+     AUTH
+     ========================= */
 
   const getAuthUser = () => {
     try {
@@ -31,11 +29,9 @@ function ShoppingList() {
     return localStorage.getItem('token')
   }
 
-  /*
-   * =========================
-   * CHARGEMENT DE LA LISTE
-   * =========================
-   */
+  /* =========================
+     CHARGEMENT DE LA LISTE
+     ========================= */
 
   useEffect(() => {
     const user = getAuthUser()
@@ -58,34 +54,36 @@ function ShoppingList() {
           },
         }
       )
-        .then((res) => {
+        .then(async (res) => {
+          const data = await res.json().catch(() => ({}))
+
           if (!res.ok) {
             throw new Error(
-              'Erreur lors du chargement de la liste'
+              data.error ||
+                'Erreur lors du chargement de la liste'
             )
           }
 
-          return res.json()
+          return data
         })
         .then(setItems)
-        .catch((err) => setError(err.message))
+        .catch((err) => {
+          console.error(err)
+          setError(err.message)
+        })
         .finally(() => setLoading(false))
     }
 
-    // Chargement initial
     fetchList()
 
-    // Re-sync toutes les 4 secondes
     const interval = setInterval(fetchList, 4000)
 
     return () => clearInterval(interval)
   }, [])
 
-  /*
-   * =========================
-   * AJOUTER UN ARTICLE
-   * =========================
-   */
+  /* =========================
+     AJOUTER UN ARTICLE
+     ========================= */
 
   const addItem = (e) => {
     e.preventDefault()
@@ -130,23 +128,22 @@ function ShoppingList() {
       .then((created) => {
         setItems((prev) => [created, ...prev])
         setLabel('')
+        setError(null)
       })
       .catch((err) => {
+        console.error(err)
         setError(err.message)
       })
   }
 
-  /*
-   * =========================
-   * COCHER / DÉCOCHER
-   * =========================
-   */
+  /* =========================
+     COCHER / DÉCOCHER
+     ========================= */
 
   const toggleItem = (item) => {
     const nextChecked = !item.is_checked
     const token = getToken()
 
-    // Mise à jour immédiate de l'interface
     setItems((prev) =>
       prev.map((i) =>
         i.id === item.id
@@ -186,7 +183,7 @@ function ShoppingList() {
       .catch((err) => {
         console.error(err)
 
-        // Annule la modification locale si le backend échoue
+        // Annule la modification locale
         setItems((prev) =>
           prev.map((i) =>
             i.id === item.id
@@ -200,16 +197,13 @@ function ShoppingList() {
       })
   }
 
-  /*
-   * =========================
-   * SUPPRIMER UN ARTICLE
-   * =========================
-   */
+  /* =========================
+     SUPPRIMER UN ARTICLE
+     ========================= */
 
   const removeItem = (id) => {
     const token = getToken()
 
-    // Suppression immédiate de l'interface
     setItems((prev) =>
       prev.filter((i) => i.id !== id)
     )
@@ -238,17 +232,14 @@ function ShoppingList() {
       .catch((err) => {
         console.error(err)
 
-        // Recharge la page pour resynchroniser
-        // avec la BDD en cas d'erreur
+        // Resynchronise avec le backend
         window.location.reload()
       })
   }
 
-  /*
-   * =========================
-   * VIDER LA LISTE
-   * =========================
-   */
+  /* =========================
+     VIDER LA LISTE
+     ========================= */
 
   const handleClearAll = async () => {
     const user = getAuthUser()
@@ -275,11 +266,11 @@ function ShoppingList() {
         }
       )
 
-      if (!res.ok) {
-        const body = await res
-          .json()
-          .catch(() => ({}))
+      const body = await res
+        .json()
+        .catch(() => ({}))
 
+      if (!res.ok) {
         throw new Error(
           body.error ||
             `Erreur ${res.status} lors de la suppression`
@@ -298,11 +289,12 @@ function ShoppingList() {
   return (
     <main className="shopping-page">
 
-      {/* MODALE CONFIRMATION */}
+      {/* =========================
+          MODALE CONFIRMATION
+          ========================= */}
 
       {confirmingClear && (
         <div className="shopping-confirm-overlay">
-
           <div className="shopping-confirm-box">
 
             <p className="shopping-confirm-text">
@@ -338,13 +330,13 @@ function ShoppingList() {
               </button>
 
             </div>
-
           </div>
-
         </div>
       )}
 
-      {/* HEADER */}
+      {/* =========================
+          HEADER
+          ========================= */}
 
       <div className="shopping-header">
 
@@ -371,7 +363,9 @@ function ShoppingList() {
 
       </div>
 
-      {/* AJOUT */}
+      {/* =========================
+          AJOUT
+          ========================= */}
 
       <form
         className="shopping-add"
@@ -393,21 +387,23 @@ function ShoppingList() {
 
       </form>
 
-      {/* ÉTATS */}
+      {/* =========================
+          ÉTATS
+          ========================= */}
 
       {loading && (
-        <p>
-          Chargement…
-        </p>
+        <p>Chargement…</p>
       )}
 
       {error && (
-        <p style={{ color: 'red' }}>
+        <p className="shopping-error">
           {error}
         </p>
       )}
 
-      {/* LISTE */}
+      {/* =========================
+          LISTE
+          ========================= */}
 
       {!loading && !error && (
         <ul className="shopping-list">
@@ -443,17 +439,105 @@ function ShoppingList() {
                 }
                 type="button"
                 aria-label={`Supprimer ${item.label}`}
-              >
-                ✕
+              >  
+  🗑️
               </button>
 
             </li>
           ))}
 
+          {/* =========================
+              LISTE VIDE
+              ========================= */}
+
           {items.length === 0 && (
-            <p className="shopping-empty">
-              Ta liste est vide.
-            </p>
+            <div className="shopping-empty">
+
+              <div
+                className="shopping-empty__cart"
+                aria-hidden="true"
+              >
+                <svg
+                  viewBox="0 0 64 64"
+                  width="52"
+                  height="52"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+
+                  <path
+                    d="M8 10H14L19 39H49L55 19H17"
+                    stroke="#171717"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+
+                  <path
+                    d="M19 39L21 45H47"
+                    stroke="#171717"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+
+                  <circle
+                    cx="25"
+                    cy="52"
+                    r="3.5"
+                    stroke="#171717"
+                    strokeWidth="3"
+                  />
+
+                  <circle
+                    cx="45"
+                    cy="52"
+                    r="3.5"
+                    stroke="#171717"
+                    strokeWidth="3"
+                  />
+
+                  <circle
+                    cx="55"
+                    cy="12"
+                    r="4"
+                    fill="#FC6532"
+                  />
+
+                  <path
+                    d="M25 22L28 37"
+                    stroke="#171717"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+
+                  <path
+                    d="M34 22L36 37"
+                    stroke="#171717"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+
+                  <path
+                    d="M43 22L44 37"
+                    stroke="#171717"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+
+                </svg>
+              </div>
+
+              <p className="shopping-empty__title">
+                Votre panier est vide
+              </p>
+
+              <p className="shopping-empty__text">
+                Ajoutez des ingrédients ou utilisez
+                "Ajouter aux courses" depuis une recette.
+              </p>
+
+            </div>
           )}
 
         </ul>

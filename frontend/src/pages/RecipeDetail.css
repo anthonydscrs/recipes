@@ -397,6 +397,13 @@
   color: #c9b7a6;
 }
 
+.recipe-detail__rating-status {
+  margin-left: 10px;
+  font-size: 13px;
+  color: #9c8a7a;
+  white-space: nowrap;
+}
+
 .recipe-detail__rating button {
   border: none;
   background: transparent;
@@ -437,6 +444,7 @@
   aspect-ratio: 16 / 9;
 
   object-fit: cover;
+  object-position: center 25%;
   border-radius: 11px;
 }
 
@@ -691,6 +699,10 @@
    TABLET
 ========================= */
 
+/* =========================
+   TABLET
+========================= */
+
 @media (max-width: 950px) {
   .recipe-detail__layout {
     grid-template-columns: minmax(0, 1fr) 360px;
@@ -702,123 +714,221 @@
   }
 }
 
+
 /* =========================
    MOBILE
 ========================= */
 
 @media (max-width: 768px) {
+
   .recipe-detail {
     padding: 22px 18px 60px;
   }
 
   .recipe-detail__back {
-    margin-bottom: 24px;
+    margin-bottom: 18px;
   }
 
-  /* On passe tout en une seule colonne */
+  /*
+   * On transforme le layout en une seule colonne.
+   *
+   * display: contents sur __main permet de placer
+   * directement image / titre / description / carte /
+   * boutons dans le bon ordre.
+   */
+
   .recipe-detail__layout {
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
-  }
-
-  .recipe-detail__main {
-    width: 100%;
-
-    /* Réordonnancement visuel (le DOM ne change pas, juste l'affichage) :
-       Titre → Note/Favori → Description → Image → Badges → Actions */
     display: flex;
     flex-direction: column;
     gap: 20px;
   }
 
-  .recipe-detail__title {
-    order: 1;
-    font-size: 40px;
+  .recipe-detail__main {
+    display: contents;
   }
 
-  .recipe-detail__rating {
-    order: 2;
-    margin: 0;
-  }
 
-  .recipe-detail__description {
-    order: 3;
-    margin: 0;
-    font-size: 15px;
-  }
+  /* =========================
+     IMAGE EN PREMIER
+  ========================= */
 
   .recipe-detail__image {
-    order: 4;
+    order: 1;
+
+    width: 100%;
     aspect-ratio: 16 / 9;
-    border-radius: 9px;
+
+    border-radius: 10px;
+
+    object-fit: cover;
+    object-position: center 25%;
   }
 
-  /* Badges et actions : chacun sur sa propre ligne, alignés à gauche.
-     Le wrap ne se déclenche que si ça déborde vraiment (4-5 badges max). */
-  .recipe-detail__badges-row {
-    order: 5;
+
+  /* =========================
+     TITRE
+  ========================= */
+
+  .recipe-detail__title {
+    order: 2;
+
     margin: 0;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+
+    font-size: 34px;
+    line-height: 1.08;
   }
 
-  .recipe-detail__badges {
-    width: 100%;
-  }
 
-  .recipe-detail__actions-mobile {
+  /* =========================
+     NOTE + FAVORI
+  ========================= */
+
+  .recipe-detail__rating {
+    order: 3;
+
+    margin: 0;
+
     display: flex;
-    width: 100%;
-    flex-wrap: wrap;
+    align-items: center;
   }
 
-  .recipe-detail__icon-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 13px;
+
+  /* =========================
+     DESCRIPTION
+  ========================= */
+
+  .recipe-detail__description {
+    order: 4;
+
+    width: 100%;
+    max-width: none;
+
+    margin: 0;
+
+    font-size: 14px;
+    line-height: 1.6;
   }
+
+
+  /* =========================
+     CARTE INGREDIENTS /
+     PREPARATION
+  ========================= */
 
   .recipe-detail__card {
-    width: 100%;
-  }
+    order: 5;
 
-  .recipe-detail__ingredient {
-    min-height: 44px;
+    width: 100%;
+    margin: 0;
+
+    border-radius: 14px;
   }
 
   .recipe-detail__content {
     min-height: 0;
   }
 
-  .recipe-detail__step {
-    gap: 12px;
+  .recipe-detail__ingredients,
+  .recipe-detail__preparation {
+    padding: 16px;
   }
 
-  /* …et on masque la version texte sous la photo */
+  .recipe-detail__ingredient {
+    min-height: 44px;
+  }
+
+  .recipe-detail__ingredient p,
+  .recipe-detail__step p {
+    font-size: 13px;
+  }
+
+  .recipe-detail__step {
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+
+  /* =========================
+     BOUTONS D'ACTIONS
+     2 COLONNES × 2 LIGNES
+  ========================= */
+
   .recipe-detail__footer-actions {
     order: 6;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+    width: 100%;
+
+    margin-top: 0;
+  }
+
+  .recipe-detail__action {
+    width: 100%;
+
+    min-height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 9px 8px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .recipe-detail__action-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+
+  /* =========================
+     ON CACHE LES ACTIONS
+     QUI ÉTAIENT À CÔTÉ
+     DES BADGES
+  ========================= */
+
+  .recipe-detail__badges-row {
+    display: none;
+  }
+
+  .recipe-detail__actions-mobile {
     display: none;
   }
 }
+
 
 /* =========================
    PETIT MOBILE
 ========================= */
 
 @media (max-width: 480px) {
+
   .recipe-detail {
     padding-left: 14px;
     padding-right: 14px;
   }
 
+  .recipe-detail__back {
+    margin-bottom: 16px;
+  }
+
   .recipe-detail__title {
-    font-size: 34px;
+    font-size: 32px;
   }
 
   .recipe-detail__rating {
-    margin-top: 12px;
+    margin: 0;
   }
 
   .recipe-detail__description {
@@ -839,7 +949,18 @@
     padding: 12px 0;
   }
 
-  .recipe-detail__badges-row {
-    flex-wrap: wrap;
+  .recipe-detail__footer-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .recipe-detail__action {
+    min-height: 40px;
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+
+  .recipe-detail__action-icon {
+    font-size: 13px;
   }
 }

@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import HeartBtn from '../components/HeartBtn'
 import StarRating from '../components/StarRating'
+import chat from '../assets/chat.jpg'
 import './RecipeDetail.css'
 
 const PLANNING_DAYS = [
@@ -25,10 +26,10 @@ const CATEGORY_LABELS = {
   dessert: '🍰 Dessert',
 }
 
-function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
+function RecipeDetail({ recipe, onBack, onEdit, onDeleted, onToggleFavorite, onRatingChange }) {
   const [activeTab, setActiveTab] = useState('ingredients')
-  const [isFavorite, setIsFavorite] = useState(false)
-  const [rating, setRating] = useState(0)
+
+  const [rating, setRating] = useState(recipe.rating ?? 0)
 
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -58,6 +59,58 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
    */
   const authHeaders = {
     Authorization: `Bearer ${token}`,
+  }
+
+  /*
+   * ============================================
+   * NOTE (RATING)
+   * ============================================
+   * La note est propre à l'utilisateur connecté et persiste
+   * côté backend (table `ratings`, une valeur par user+recette).
+   * `recipe.rating` vient déjà scopé à l'utilisateur connecté
+   * (GET /api/recipes), donc on se resynchronise dessus à chaque
+   * changement de recette affichée, sans requête supplémentaire.
+   */
+
+  useEffect(() => {
+    setRating(recipe.rating ?? 0)
+  }, [recipe.id, recipe.rating])
+
+  const handleRate = async (value) => {
+    const previousRating = rating
+
+    // Mise à jour optimiste
+    setRating(value)
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/ratings/${recipe.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            ...authHeaders,
+          },
+          body: JSON.stringify({ value }),
+        }
+      )
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+
+        throw new Error(
+          body.error || "Erreur lors de l'enregistrement de la note"
+        )
+      }
+
+      const data = await res.json()
+
+      setRating(data.value ?? value)
+      onRatingChange?.(data.value ?? value)
+    } catch (err) {
+      console.error('Erreur enregistrement note :', err)
+      setRating(previousRating)
+    }
   }
 
   /*
@@ -523,17 +576,13 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
 
             <StarRating
               rating={rating}
-              onChange={setRating}
+              onChange={handleRate}
               size={20}
             />
 
             <HeartBtn
-              active={isFavorite}
-              onClick={() =>
-                setIsFavorite(
-                  (prev) => !prev
-                )
-              }
+              active={recipe.favorite}
+              onClick={() => onToggleFavorite?.()}
               size={22}
             />
 
@@ -544,7 +593,7 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
           </p>
 
           <img
-            src={recipe.image}
+            src={recipe.image || chat}
             alt={recipe.title}
             className="recipe-detail__image"
           />
@@ -569,7 +618,7 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
                   ? 'Ajout…'
                   : addedToList
                     ? 'Ajouté !'
-                    : 'Ajouter les ingrédients aux courses'}
+                    : 'Ajouter aux courses'}
               </span>
             </button>
 
