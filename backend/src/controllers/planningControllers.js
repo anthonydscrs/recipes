@@ -1,18 +1,17 @@
 const pool = require("../database");
 
-// NOTE: en attendant l'auth, group_id/added_by sont passés explicitement par
-// le client (query pour GET, body pour POST). Quand l'auth sera en place,
-// remplacer req.query.group_id / req.body.added_by par req.user.group_id / req.user.id.
+// L'auth est en place : group_id/added_by viennent du JWT (req.user), posé
+// par authMiddleware. On ne fait plus confiance à un group_id envoyé par le
+// client : sinon n'importe quel utilisateur authentifié pourrait lire ou
+// modifier le planning d'un autre groupe en changeant juste la query/body.
 
-// GET /api/planning?group_id=1
-// Renvoie tous les créneaux (jour + repas) du groupe, avec les infos de la
-// recette jointe pour affichage direct dans la grille.
+// GET /api/planning
+// Renvoie tous les créneaux (jour + repas) du groupe de l'utilisateur
+// connecté, avec les infos de la recette jointe pour affichage direct dans
+// la grille.
 const getPlanning = async (req, res) => {
   try {
-    const groupId = req.query.group_id;
-    if (!groupId) {
-      return res.status(400).json({ error: "group_id est requis" });
-    }
+    const groupId = req.user.groupId;
 
     const [rows] = await pool.query(
       `SELECT
@@ -37,23 +36,19 @@ const getPlanning = async (req, res) => {
   }
 };
 
-// POST /api/planning  { group_id, added_by, recipe_id, day, meal }
+// POST /api/planning  { recipe_id, day, meal }
 // Un seul plat par créneau (groupe + jour + repas) : si le créneau est déjà
 // occupé, la recette est remplacée plutôt que dupliquée.
 const setPlanningItem = async (req, res) => {
   try {
-    const {
-      group_id: groupId,
-      added_by: addedBy,
-      recipe_id: recipeId,
-      day,
-      meal,
-    } = req.body;
+    const groupId = req.user.groupId;
+    const addedBy = req.user.id;
+    const { recipe_id: recipeId, day, meal } = req.body;
 
-    if (!groupId || !recipeId || !day || !meal) {
+    if (!recipeId || !day || !meal) {
       return res
         .status(400)
-        .json({ error: "group_id, recipe_id, day et meal sont requis" });
+        .json({ error: "recipe_id, day et meal sont requis" });
     }
 
     await pool.query(
@@ -62,7 +57,7 @@ const setPlanningItem = async (req, res) => {
        ON DUPLICATE KEY UPDATE
          recipe_id = VALUES(recipe_id),
          added_by = VALUES(added_by)`,
-      [groupId, recipeId, addedBy ?? null, day, meal]
+      [groupId, recipeId, addedBy, day, meal]
     );
 
     const [rows] = await pool.query(
@@ -89,13 +84,15 @@ const setPlanningItem = async (req, res) => {
 };
 
 // DELETE /api/planning/:id
+// Le créneau doit appartenir au groupe de l'utilisateur connecté.
 const deletePlanningItem = async (req, res) => {
   try {
     const { id } = req.params;
+    const groupId = req.user.groupId;
 
     const [result] = await pool.query(
-      "DELETE FROM planning_items WHERE id = ?",
-      [id]
+      "DELETE FROM planning_items WHERE id = ? AND group_id = ?",
+      [id, groupId]
     );
 
     if (result.affectedRows === 0) {
@@ -109,14 +106,11 @@ const deletePlanningItem = async (req, res) => {
   }
 };
 
-// DELETE /api/planning?group_id=1
-// Vide entièrement le planning du groupe.
+// DELETE /api/planning
+// Vide entièrement le planning du groupe de l'utilisateur connecté.
 const clearPlanning = async (req, res) => {
   try {
-    const groupId = req.query.group_id;
-    if (!groupId) {
-      return res.status(400).json({ error: "group_id est requis" });
-    }
+    const groupId = req.user.groupId;
 
     await pool.query("DELETE FROM planning_items WHERE group_id = ?", [
       groupId,

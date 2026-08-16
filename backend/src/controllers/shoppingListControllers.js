@@ -1,16 +1,16 @@
 const pool = require("../database");
 
-// NOTE: en attendant l'auth, group_id/added_by sont passés explicitement par
-// le client (query pour GET, body pour POST). Quand l'auth sera en place,
-// remplacer req.query.group_id / req.body.added_by par req.user.group_id / req.user.id.
+// L'auth est en place : group_id/added_by viennent du JWT (req.user), posé
+// par authMiddleware. On ne fait plus confiance à un group_id envoyé par le
+// client : sinon n'importe quel utilisateur authentifié pourrait lire ou
+// modifier la liste de courses d'un autre groupe en changeant juste la
+// query/body. Les routes par :id vérifient aussi que l'item appartient bien
+// au groupe de l'utilisateur avant de le modifier/supprimer.
 
-// GET /api/shopping-list?group_id=1
+// GET /api/shopping-list
 const getShoppingList = async (req, res) => {
   try {
-    const groupId = req.query.group_id;
-    if (!groupId) {
-      return res.status(400).json({ error: "group_id est requis" });
-    }
+    const groupId = req.user.groupId;
 
     const [rows] = await pool.query(
       `SELECT * FROM shopping_list_items
@@ -26,18 +26,20 @@ const getShoppingList = async (req, res) => {
   }
 };
 
-// POST /api/shopping-list  { group_id, added_by, label }
+// POST /api/shopping-list  { label }
 const addItem = async (req, res) => {
   try {
-    const { group_id: groupId, added_by: addedBy, label } = req.body;
-    if (!groupId || !label?.trim()) {
-      return res.status(400).json({ error: "group_id et label sont requis" });
+    const groupId = req.user.groupId;
+    const addedBy = req.user.id;
+    const { label } = req.body;
+    if (!label?.trim()) {
+      return res.status(400).json({ error: "label est requis" });
     }
 
     const [result] = await pool.query(
       `INSERT INTO shopping_list_items (group_id, added_by, label)
        VALUES (?, ?, ?)`,
-      [groupId, addedBy ?? null, label.trim()]
+      [groupId, addedBy, label.trim()]
     );
 
     const [rows] = await pool.query(
@@ -52,14 +54,16 @@ const addItem = async (req, res) => {
   }
 };
 
-// POST /api/shopping-list/from-recipe  { group_id, added_by, recipe_id }
+// POST /api/shopping-list/from-recipe  { recipe_id }
 // Éclate les ingrédients d'une recette (stockés en texte, un par ligne) et
 // les insère chacun comme article séparé dans la liste de courses du groupe.
 const addFromRecipe = async (req, res) => {
   try {
-    const { group_id: groupId, added_by: addedBy, recipe_id: recipeId } = req.body;
-    if (!groupId || !recipeId) {
-      return res.status(400).json({ error: "group_id et recipe_id sont requis" });
+    const groupId = req.user.groupId;
+    const addedBy = req.user.id;
+    const { recipe_id: recipeId } = req.body;
+    if (!recipeId) {
+      return res.status(400).json({ error: "recipe_id est requis" });
     }
 
     const [recipeRows] = await pool.query(
@@ -79,7 +83,7 @@ const addFromRecipe = async (req, res) => {
       return res.status(400).json({ error: "Cette recette n'a aucun ingrédient" });
     }
 
-    const values = ingredients.map((label) => [groupId, addedBy ?? null, label]);
+    const values = ingredients.map((label) => [groupId, addedBy, label]);
     await pool.query(
       "INSERT INTO shopping_list_items (group_id, added_by, label) VALUES ?",
       [values]
@@ -103,11 +107,12 @@ const addFromRecipe = async (req, res) => {
 const toggleItem = async (req, res) => {
   try {
     const { id } = req.params;
+    const groupId = req.user.groupId;
     const { is_checked: isChecked } = req.body;
 
     const [result] = await pool.query(
-      "UPDATE shopping_list_items SET is_checked = ? WHERE id = ?",
-      [isChecked, id]
+      "UPDATE shopping_list_items SET is_checked = ? WHERE id = ? AND group_id = ?",
+      [isChecked, id, groupId]
     );
 
     if (result.affectedRows === 0) {
@@ -130,10 +135,11 @@ const toggleItem = async (req, res) => {
 const deleteItem = async (req, res) => {
   try {
     const { id } = req.params;
+    const groupId = req.user.groupId;
 
     const [result] = await pool.query(
-      "DELETE FROM shopping_list_items WHERE id = ?",
-      [id]
+      "DELETE FROM shopping_list_items WHERE id = ? AND group_id = ?",
+      [id, groupId]
     );
 
     if (result.affectedRows === 0) {
@@ -147,14 +153,11 @@ const deleteItem = async (req, res) => {
   }
 };
 
-// DELETE /api/shopping-list?group_id=1
-// Vide entièrement la liste de courses du groupe.
+// DELETE /api/shopping-list
+// Vide entièrement la liste de courses du groupe de l'utilisateur connecté.
 const clearList = async (req, res) => {
   try {
-    const groupId = req.query.group_id;
-    if (!groupId) {
-      return res.status(400).json({ error: "group_id est requis" });
-    }
+    const groupId = req.user.groupId;
 
     await pool.query("DELETE FROM shopping_list_items WHERE group_id = ?", [
       groupId,

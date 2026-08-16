@@ -42,13 +42,6 @@ function Planning({ recipes, onSelectRecipe }) {
 
   const token = localStorage.getItem('token')
 
-  const user = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  )
-
-  const GROUP_ID = user.groupId
-  const USER_ID = user.id
-
   /*
    * ============================================
    * HEADERS AUTH
@@ -66,14 +59,14 @@ function Planning({ recipes, onSelectRecipe }) {
    */
 
   const fetchPlanning = () => {
-    if (!token || !GROUP_ID) {
+    if (!token) {
       setError('Utilisateur non authentifié.')
       setLoading(false)
       return
     }
 
     fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/planning?group_id=${GROUP_ID}`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/planning`,
       {
         headers: authHeaders,
       }
@@ -207,8 +200,6 @@ function Planning({ recipes, onSelectRecipe }) {
           },
 
           body: JSON.stringify({
-            group_id: GROUP_ID,
-            added_by: USER_ID,
             recipe_id: recipeId,
             day,
             meal,
@@ -306,7 +297,7 @@ function Planning({ recipes, onSelectRecipe }) {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/planning?group_id=${GROUP_ID}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/planning`,
         {
           method: 'DELETE',
 

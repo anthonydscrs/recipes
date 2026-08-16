@@ -10,7 +10,7 @@ import { login as loginRequest } from '../services/auth'
 
 const AuthContext = createContext(null)
 
-export function AuthContextProvider({ children }) {
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user')
 
@@ -64,7 +64,7 @@ export function AuthContextProvider({ children }) {
   )
 }
 
-AuthContextProvider.propTypes = {
+AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 }
 

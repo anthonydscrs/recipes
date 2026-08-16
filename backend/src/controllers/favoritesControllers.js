@@ -1,10 +1,8 @@
 const pool = require("../database");
 
-// NOTE: en attendant l'auth, user_id est passé explicitement par le client
-// (query pour GET/DELETE, body pour POST). Quand l'auth sera en place, il
-// suffira d'ajouter un middleware qui lit le JWT et pose req.user = { id },
-// puis de remplacer partout ci-dessous `req.query.user_id` / `req.body.user_id`
-// par `req.user.id`. La signature des fonctions ne changera pas.
+// L'auth est en place : l'utilisateur vient du JWT (req.user.id), posé par
+// authMiddleware. On ne fait plus jamais confiance à un user_id envoyé par
+// le client (query/body) pour savoir qui fait la requête.
 
 const formatRecipe = (r) => ({
   ...r,
@@ -13,14 +11,11 @@ const formatRecipe = (r) => ({
   preparation: r.preparation.split("\n"),
 });
 
-// GET /api/favorites?user_id=1
-// Renvoie la liste complète des recettes favorites de l'utilisateur.
+// GET /api/favorites
+// Renvoie la liste complète des recettes favorites de l'utilisateur connecté.
 const getFavorites = async (req, res) => {
   try {
-    const userId = req.query.user_id;
-    if (!userId) {
-      return res.status(400).json({ error: "user_id est requis" });
-    }
+    const userId = req.user.id;
 
     const [rows] = await pool.query(
       `SELECT r.*
@@ -38,13 +33,14 @@ const getFavorites = async (req, res) => {
   }
 };
 
-// POST /api/favorites  { user_id, recipe_id }
+// POST /api/favorites  { recipe_id }
 // Ajoute une recette aux favoris. Idempotent (UNIQUE user_id+recipe_id en DB).
 const addFavorite = async (req, res) => {
   try {
-    const { user_id: userId, recipe_id: recipeId } = req.body;
-    if (!userId || !recipeId) {
-      return res.status(400).json({ error: "user_id et recipe_id sont requis" });
+    const userId = req.user.id;
+    const { recipe_id: recipeId } = req.body;
+    if (!recipeId) {
+      return res.status(400).json({ error: "recipe_id est requis" });
     }
 
     const [recipeRows] = await pool.query(
@@ -62,28 +58,25 @@ const addFavorite = async (req, res) => {
       [userId, recipeId]
     );
 
-    res.status(201).json({ user_id: Number(userId), recipe_id: Number(recipeId), favorite: true });
+    res.status(201).json({ user_id: userId, recipe_id: Number(recipeId), favorite: true });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 };
 
-// DELETE /api/favorites/:recipeId?user_id=1
+// DELETE /api/favorites/:recipeId
 const removeFavorite = async (req, res) => {
   try {
     const { recipeId } = req.params;
-    const userId = req.query.user_id;
-    if (!userId) {
-      return res.status(400).json({ error: "user_id est requis" });
-    }
+    const userId = req.user.id;
 
     await pool.query(
       "DELETE FROM favorites WHERE user_id = ? AND recipe_id = ?",
       [userId, recipeId]
     );
 
-    res.json({ user_id: Number(userId), recipe_id: Number(recipeId), favorite: false });
+    res.json({ user_id: userId, recipe_id: Number(recipeId), favorite: false });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Erreur serveur" });
