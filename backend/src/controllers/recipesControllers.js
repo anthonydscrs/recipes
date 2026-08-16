@@ -1,5 +1,11 @@
 const pool = require("../database");
 
+// L'auth est en place : group_id/created_by viennent du JWT (req.user), posé
+// par authMiddleware. On ne fait plus confiance à un group_id envoyé par le
+// client, et toutes les lectures/écritures sont scopées au groupe de
+// l'utilisateur connecté (sinon n'importe quel utilisateur authentifié
+// pourrait lire ou modifier les recettes d'un autre groupe).
+
 const ALLOWED_CATEGORIES = ["viande", "végé", "féculent", "dessert"];
 
 const normalizeCategories = (category) => {
@@ -18,11 +24,27 @@ const formatRecipe = (r) => ({
   category: r.category ? r.category.split(",") : [],
   ingredients: r.ingredients.split("\n"),
   preparation: r.preparation.split("\n"),
+  rating_average: r.rating_average
+    ? Math.round(Number(r.rating_average) * 10) / 10
+    : 0,
+  rating_count: r.rating_count ?? 0,
 });
 
 const getAllRecipes = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM recipes");
+    const groupId = req.user.groupId;
+
+    const [rows] = await pool.query(
+      `SELECT
+         r.*,
+         AVG(ra.value) AS rating_average,
+         COUNT(ra.value) AS rating_count
+       FROM recipes r
+       LEFT JOIN ratings ra ON ra.recipe_id = r.id
+       WHERE r.group_id = ?
+       GROUP BY r.id`,
+      [groupId]
+    );
     res.json(rows.map(formatRecipe));
   } catch (err) {
     console.error(err);
@@ -32,9 +54,19 @@ const getAllRecipes = async (req, res) => {
 
 const getRecipeById = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM recipes WHERE id = ?", [
-      req.params.id,
-    ]);
+    const groupId = req.user.groupId;
+
+    const [rows] = await pool.query(
+      `SELECT
+         r.*,
+         AVG(ra.value) AS rating_average,
+         COUNT(ra.value) AS rating_count
+       FROM recipes r
+       LEFT JOIN ratings ra ON ra.recipe_id = r.id
+       WHERE r.id = ? AND r.group_id = ?
+       GROUP BY r.id`,
+      [req.params.id, groupId]
+    );
     if (rows.length === 0) {
       return res.status(404).json({ error: "Recette introuvable" });
     }
@@ -47,9 +79,10 @@ const getRecipeById = async (req, res) => {
 
 const createRecipe = async (req, res) => {
   try {
+    const groupId = req.user.groupId;
+    const createdBy = req.user.id;
+
     const {
-      group_id,
-      created_by,
       title,
       description,
       image_url,
@@ -66,7 +99,6 @@ const createRecipe = async (req, res) => {
 
     // validation minimale
     if (
-      !group_id ||
       !title ||
       categoryList.length === 0 ||
       invalidCategory ||
@@ -76,7 +108,7 @@ const createRecipe = async (req, res) => {
     ) {
       return res.status(400).json({
         error:
-          "group_id, title, au moins une catégorie valide, season, ingredients et preparation sont requis",
+          "title, au moins une catégorie valide, season, ingredients et preparation sont requis",
       });
     }
 
@@ -85,8 +117,8 @@ const createRecipe = async (req, res) => {
         (group_id, created_by, title, description, image_url, category, season, ingredients, preparation)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        group_id,
-        created_by,
+        groupId,
+        createdBy,
         title,
         description,
         image_url,
@@ -111,6 +143,7 @@ const createRecipe = async (req, res) => {
 const updateRecipe = async (req, res) => {
   try {
     const { id } = req.params;
+    const groupId = req.user.groupId;
 
     const {
       title,
@@ -145,7 +178,7 @@ const updateRecipe = async (req, res) => {
     const [result] = await pool.query(
       `UPDATE recipes
        SET title = ?, description = ?, image_url = ?, category = ?, season = ?, ingredients = ?, preparation = ?
-       WHERE id = ?`,
+       WHERE id = ? AND group_id = ?`,
       [
         title,
         description ?? null,
@@ -155,6 +188,7 @@ const updateRecipe = async (req, res) => {
         Array.isArray(ingredients) ? ingredients.join("\n") : ingredients,
         Array.isArray(preparation) ? preparation.join("\n") : preparation,
         id,
+        groupId,
       ]
     );
 
@@ -176,10 +210,12 @@ const updateRecipe = async (req, res) => {
 const deleteRecipe = async (req, res) => {
   try {
     const { id } = req.params;
+    const groupId = req.user.groupId;
 
-    const [result] = await pool.query("DELETE FROM recipes WHERE id = ?", [
-      id,
-    ]);
+    const [result] = await pool.query(
+      "DELETE FROM recipes WHERE id = ? AND group_id = ?",
+      [id, groupId]
+    );
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Recette introuvable" });
