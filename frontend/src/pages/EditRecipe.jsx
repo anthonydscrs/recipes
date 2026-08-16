@@ -18,7 +18,11 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
     title: recipe.title || '',
     description: recipe.description || '',
     image_url: recipe.image || recipe.image_url || '',
-    category: recipe.category,
+    category: Array.isArray(recipe.category)
+      ? recipe.category
+      : recipe.category
+        ? [recipe.category]
+        : [],
     season: recipe.season,
     ingredients: Array.isArray(recipe.ingredients)
       ? recipe.ingredients.join('\n')
@@ -43,6 +47,19 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
       ...f,
       [key]: e.target.value,
     }))
+
+  const toggleCategory = (value) => {
+    setForm((f) => {
+      const has = f.category.includes(value)
+
+      if (has) {
+        if (f.category.length === 1) return f
+        return { ...f, category: f.category.filter((c) => c !== value) }
+      }
+
+      return { ...f, category: [...f.category, value] }
+    })
+  }
 
   /* =========================
      IMAGE
@@ -394,11 +411,11 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
           </div>
         </div>
 
-        {/* CATEGORIE */}
+        {/* CATEGORIE (multi-sélection) */}
 
         <div className="add-recipe__field">
           <label className="add-recipe__label">
-            Catégorie
+            Catégorie(s)
           </label>
 
           <div className="add-recipe__toggle-group">
@@ -408,22 +425,21 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
                 key={c.value}
                 type="button"
                 className={`add-recipe__toggle ${
-                  form.category === c.value
+                  form.category.includes(c.value)
                     ? 'add-recipe__toggle--active'
                     : ''
                 }`}
-                onClick={() =>
-                  setForm((f) => ({
-                    ...f,
-                    category: c.value,
-                  }))
-                }
+                onClick={() => toggleCategory(c.value)}
               >
                 {c.label}
               </button>
             ))}
 
           </div>
+
+          <p className="add-recipe__hint">
+            Sélectionne une ou plusieurs catégories.
+          </p>
         </div>
 
         {/* ERREUR */}

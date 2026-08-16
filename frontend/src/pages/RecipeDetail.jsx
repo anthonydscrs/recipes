@@ -11,7 +11,12 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
   const [activeTab, setActiveTab] = useState('ingredients')
   const [isFavorite, setIsFavorite] = useState(false)
   const [rating, setRating] = useState(0)
-
+const CATEGORY_LABELS = {
+  viande: '🥩 Viande',
+  'végé': '🥦 Végé',
+  'féculent': '🌾 Féculent',
+  dessert: '🍰 Dessert',
+}
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState(null)
@@ -79,6 +84,12 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
     alert('Bientôt disponible : ajout au planning 🙂')
   }
 
+  const categories = Array.isArray(recipe.category)
+  ? recipe.category
+  : recipe.category
+    ? [recipe.category]
+    : []
+
   return (
     <main className="recipe-detail">
 
@@ -131,28 +142,26 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
           {/* LIGNE BADGES + ACTIONS MOBILE (icônes, visible seulement en mobile) */}
           <div className="recipe-detail__badges-row">
 
-            <div className="recipe-detail__badges">
-              <span
-                className={`recipe-detail__badge ${
-                  recipe.season === 'Été'
-                    ? 'recipe-detail__badge--summer'
-                    : 'recipe-detail__badge--winter'
-                }`}
-              >
-                {recipe.season === 'Été' ? '☀️ Été' : '❄️ Hiver'}
-              </span>
+          <div className="recipe-detail__badges">
+  <span
+    className={`recipe-detail__badge ${
+      recipe.season === 'Été'
+        ? 'recipe-detail__badge--summer'
+        : 'recipe-detail__badge--winter'
+    }`}
+  >
+    {recipe.season === 'Été' ? '☀️ Été' : '❄️ Hiver'}
+  </span>
 
-              <span
-                className={`recipe-detail__badge recipe-detail__badge--${recipe.category}`}
-              >
-                {{
-  viande: '🥩 Viande',
-  'végé': '🥦 Végé',
-  'féculent': '🌾 Féculent',
-  dessert: '🍰 Dessert',
-}[recipe.category]}
-              </span>
-            </div>
+  {categories.map((cat) => (
+    <span
+      key={cat}
+      className={`recipe-detail__badge recipe-detail__badge--${cat}`}
+    >
+      {CATEGORY_LABELS[cat]}
+    </span>
+  ))}
+</div>
 
             <div className="recipe-detail__actions-mobile">
               <button

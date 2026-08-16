@@ -1,7 +1,20 @@
 import HeartBtn from './HeartBtn'
 import './RecipeCard.css'
 
+const CATEGORY_LABELS = {
+  viande: '🥩 Viande',
+  'végé': '🥦 Végé',
+  'féculent': '🌾 Féculent',
+  dessert: '🍰 Dessert',
+}
+
 function RecipeCard({ recipe, onClick, onToggleFavorite }) {
+  const categories = Array.isArray(recipe.category)
+    ? recipe.category
+    : recipe.category
+      ? [recipe.category]
+      : []
+
   return (
     <article className="recipe-card" onClick={() => onClick?.(recipe)}>
       <div className="recipe-card__image-container">
@@ -11,14 +24,11 @@ function RecipeCard({ recipe, onClick, onToggleFavorite }) {
           <span className={`recipe-badge ${recipe.season === 'Été' ? 'recipe-badge--summer' : 'recipe-badge--winter'}`}>
             {recipe.season === 'Été' ? '☀️ Été' : '❄️ Hiver'}
           </span>
-          <span className={`recipe-badge recipe-badge--${recipe.category}`}>
-            {{
-  viande: '🥩 Viande',
-  'végé': '🥦 Végé',
-  'féculent': '🌾 Féculent',
-  dessert: '🍰 Dessert',
-}[recipe.category]}
-          </span>
+          {categories.map((cat) => (
+            <span key={cat} className={`recipe-badge recipe-badge--${cat}`}>
+              {CATEGORY_LABELS[cat]}
+            </span>
+          ))}
         </div>
 
         <div className="recipe-card__heart">

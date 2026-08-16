@@ -13,7 +13,7 @@ const CATEGORY_LABELS = {
 function FilterBar({
   search, setSearch,
   season, setSeason,
-  category, setCategory,
+  categories, toggleCategory, clearCategories,
   favoriteOnly, setFavoriteOnly,
   activeCount,
 }) {
@@ -54,16 +54,23 @@ function FilterBar({
             </div>
           </div>
 
-
-
           <div className="filter-bar__divider" />
 
           <div className="filter-bar__filter-row">
             <span className="filter-bar__label">Catégorie</span>
             <div className="filter-bar__pills">
-              <FilterPill label="Toutes" active={category === 'Tous'} onClick={() => setCategory('Tous')} />
+              <FilterPill
+                label="Toutes"
+                active={categories.length === 0}
+                onClick={clearCategories}
+              />
               {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
-                <FilterPill key={key} label={label} active={category === key} onClick={() => setCategory(key)} />
+                <FilterPill
+                  key={key}
+                  label={label}
+                  active={categories.includes(key)}
+                  onClick={() => toggleCategory(key)}
+                />
               ))}
             </div>
           </div>

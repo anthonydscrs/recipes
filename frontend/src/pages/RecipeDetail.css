@@ -154,6 +154,7 @@
 
 .recipe-detail__badges {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -611,20 +612,60 @@
 
   .recipe-detail__main {
     width: 100%;
+
+    /* Réordonnancement visuel (le DOM ne change pas, juste l'affichage) :
+       Titre → Note/Favori → Description → Image → Badges → Actions */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 
   .recipe-detail__title {
+    order: 1;
     font-size: 40px;
   }
 
+  .recipe-detail__rating {
+    order: 2;
+    margin: 0;
+  }
+
   .recipe-detail__description {
+    order: 3;
+    margin: 0;
     font-size: 15px;
-    margin-bottom: 22px;
   }
 
   .recipe-detail__image {
+    order: 4;
     aspect-ratio: 16 / 9;
     border-radius: 9px;
+  }
+
+  /* Badges et actions : chacun sur sa propre ligne, alignés à gauche.
+     Le wrap ne se déclenche que si ça déborde vraiment (4-5 badges max). */
+  .recipe-detail__badges-row {
+    order: 5;
+    margin: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .recipe-detail__badges {
+    width: 100%;
+  }
+
+  .recipe-detail__actions-mobile {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .recipe-detail__icon-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
   }
 
   .recipe-detail__card {
@@ -643,13 +684,9 @@
     gap: 12px;
   }
 
-  /* On affiche les icônes Modifier/Supprimer à côté des badges… */
-  .recipe-detail__actions-mobile {
-    display: flex;
-  }
-
   /* …et on masque la version texte sous la photo */
   .recipe-detail__footer-actions {
+    order: 6;
     display: none;
   }
 }
