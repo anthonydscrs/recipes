@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+
 import Header from './components/Header'
 import RecipeCard from './components/RecipeCard'
 import RecipeDetail from './pages/RecipeDetail'
@@ -7,35 +8,82 @@ import EditRecipe from './pages/EditRecipe'
 import FilterBar from './components/FilterBar'
 import ShoppingList from './pages/ShoppingList'
 import Planning from './pages/Planning'
+import Login from './pages/Login'
+
 import { useRecipeFilters } from './hooks/useRecipeFilters'
 import { usePagination } from './hooks/usePagination'
+import { useAuth } from './contexts/AuthContext'
 
 function App() {
+  const {
+    user,
+    isAuthenticated,
+  } = useAuth()
+
   const [tab, setTab] = useState('recettes')
   const [recipes, setRecipes] = useState([])
-  const [favoriteIds, setFavoriteIds] = useState(new Set()) // TODO: brancher sur le backend une fois l'auth prête
-  const [selectedRecipe, setSelectedRecipe] = useState(null)
-  const [addingRecipe, setAddingRecipe] = useState(false)
-  const [editingRecipe, setEditingRecipe] = useState(null)
+  const [favoriteIds, setFavoriteIds] = useState(
+    new Set()
+  )
+
+  const [selectedRecipe, setSelectedRecipe] =
+    useState(null)
+
+  const [addingRecipe, setAddingRecipe] =
+    useState(false)
+
+  const [editingRecipe, setEditingRecipe] =
+    useState(null)
+
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // ============================================
+  // CHARGEMENT DES RECETTES
+  // ============================================
+
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/recipes`)
+    // Pas de requête si l'utilisateur n'est pas connecté
+    if (!isAuthenticated) {
+      setLoading(false)
+      return
+    }
+
+    const token = localStorage.getItem('token')
+
+    fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/recipes`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((res) => {
         if (!res.ok) {
-          throw new Error('Erreur lors du chargement des recettes')
+          throw new Error(
+            'Erreur lors du chargement des recettes'
+          )
         }
 
         return res.json()
       })
-      .then((data) => setRecipes(data))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [])
+      .then((data) => {
+        setRecipes(data)
+        setError(null)
+      })
+      .catch((err) => {
+        setError(err.message)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [isAuthenticated])
 
-  // Changer d'onglet depuis le header referme toute vue recette en cours
-  // (ajout / édition / détail), pour ne pas rester coincé dessus.
+  // ============================================
+  // CHANGEMENT D'ONGLET
+  // ============================================
+
   const handleSetTab = (next) => {
     setAddingRecipe(false)
     setEditingRecipe(null)
@@ -43,27 +91,43 @@ function App() {
     setTab(next)
   }
 
+  // ============================================
+  // FAVORIS
+  // ============================================
+
   const toggleFavorite = (id) => {
     setFavoriteIds((prev) => {
       const next = new Set(prev)
 
-      next.has(id)
-        ? next.delete(id)
-        : next.add(id)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
 
       return next
     })
   }
 
-  const recipesWithFavorite = recipes.map((r) => ({
-    ...r,
-    favorite: favoriteIds.has(r.id),
-  }))
+  const recipesWithFavorite = recipes.map(
+    (recipe) => ({
+      ...recipe,
+      favorite: favoriteIds.has(recipe.id),
+    })
+  )
 
-  // Filtres
-  const filters = useRecipeFilters(recipesWithFavorite)
+  // ============================================
+  // FILTRES
+  // ============================================
 
-  // Pagination : 12 recettes par page
+  const filters = useRecipeFilters(
+    recipesWithFavorite
+  )
+
+  // ============================================
+  // PAGINATION
+  // ============================================
+
   const {
     paginated,
     currentPage,
@@ -71,7 +135,22 @@ function App() {
     goToPage,
     nextPage,
     previousPage,
-  } = usePagination(filters.filtered, 12)
+  } = usePagination(
+    filters.filtered,
+    12
+  )
+
+  // ============================================
+  // SI PAS CONNECTÉ
+  // ============================================
+
+  if (!isAuthenticated) {
+    return <Login />
+  }
+
+  // ============================================
+  // AJOUT RECETTE
+  // ============================================
 
   if (addingRecipe) {
     return (
@@ -82,15 +161,25 @@ function App() {
         />
 
         <AddRecipe
-          onBack={() => setAddingRecipe(false)}
+          onBack={() =>
+            setAddingRecipe(false)
+          }
           onCreated={(created) => {
-            setRecipes((prev) => [...prev, created])
+            setRecipes((prev) => [
+              ...prev,
+              created,
+            ])
+
             setAddingRecipe(false)
           }}
         />
       </>
     )
   }
+
+  // ============================================
+  // MODIFICATION RECETTE
+  // ============================================
 
   if (editingRecipe) {
     return (
@@ -102,13 +191,15 @@ function App() {
 
         <EditRecipe
           recipe={editingRecipe}
-          onBack={() => setEditingRecipe(null)}
+          onBack={() =>
+            setEditingRecipe(null)
+          }
           onUpdated={(updated) => {
             setRecipes((prev) =>
-              prev.map((r) =>
-                r.id === updated.id
+              prev.map((recipe) =>
+                recipe.id === updated.id
                   ? updated
-                  : r
+                  : recipe
               )
             )
 
@@ -120,10 +211,15 @@ function App() {
     )
   }
 
+  // ============================================
+  // DÉTAIL RECETTE
+  // ============================================
+
   if (selectedRecipe) {
     const recipe =
       recipesWithFavorite.find(
-        (r) => r.id === selectedRecipe.id
+        (recipe) =>
+          recipe.id === selectedRecipe.id
       ) ?? selectedRecipe
 
     return (
@@ -135,12 +231,21 @@ function App() {
 
         <RecipeDetail
           recipe={recipe}
-          onBack={() => setSelectedRecipe(null)}
-          onToggleFavorite={() => toggleFavorite(recipe.id)}
-          onEdit={(r) => setEditingRecipe(r)}
+          onBack={() =>
+            setSelectedRecipe(null)
+          }
+          onToggleFavorite={() =>
+            toggleFavorite(recipe.id)
+          }
+          onEdit={(recipeToEdit) =>
+            setEditingRecipe(recipeToEdit)
+          }
           onDeleted={(id) => {
             setRecipes((prev) =>
-              prev.filter((r) => r.id !== id)
+              prev.filter(
+                (recipe) =>
+                  recipe.id !== id
+              )
             )
 
             setSelectedRecipe(null)
@@ -149,6 +254,10 @@ function App() {
       </>
     )
   }
+
+  // ============================================
+  // SITE PRINCIPAL
+  // ============================================
 
   return (
     <>
@@ -173,7 +282,12 @@ function App() {
           )}
 
           {error && (
-            <p style={{ padding: 32, color: 'red' }}>
+            <p
+              style={{
+                padding: 32,
+                color: 'red',
+              }}
+            >
               {error}
             </p>
           )}
@@ -186,13 +300,18 @@ function App() {
               <div className="recipes-header">
 
                 <p className="recipes-count">
-                  {filters.filtered.length} recette
-                  {filters.filtered.length !== 1 ? 's' : ''}
+                  {filters.filtered.length}{' '}
+                  recette
+                  {filters.filtered.length !== 1
+                    ? 's'
+                    : ''}
                 </p>
 
                 <button
                   className="add-recipe-btn"
-                  onClick={() => setAddingRecipe(true)}
+                  onClick={() =>
+                    setAddingRecipe(true)
+                  }
                 >
                   + Ajouter une recette
                 </button>
@@ -207,7 +326,9 @@ function App() {
                     recipe={recipe}
                     onClick={setSelectedRecipe}
                     onToggleFavorite={() =>
-                      toggleFavorite(recipe.id)
+                      toggleFavorite(
+                        recipe.id
+                      )
                     }
                   />
                 ))}
@@ -219,8 +340,12 @@ function App() {
 
                   <button
                     className="recipes-pagination__arrow"
-                    onClick={previousPage}
-                    disabled={currentPage === 1}
+                    onClick={
+                      previousPage
+                    }
+                    disabled={
+                      currentPage === 1
+                    }
                     aria-label="Page précédente"
                   >
                     ←
@@ -229,19 +354,25 @@ function App() {
                   <div className="recipes-pagination__pages">
 
                     {Array.from(
-                      { length: totalPages },
+                      {
+                        length: totalPages,
+                      },
                       (_, index) => {
-                        const page = index + 1
+                        const page =
+                          index + 1
 
                         return (
                           <button
                             key={page}
                             className={`recipes-pagination__page ${
-                              currentPage === page
+                              currentPage ===
+                              page
                                 ? 'recipes-pagination__page--active'
                                 : ''
                             }`}
-                            onClick={() => goToPage(page)}
+                            onClick={() =>
+                              goToPage(page)
+                            }
                           >
                             {page}
                           </button>
@@ -253,8 +384,13 @@ function App() {
 
                   <button
                     className="recipes-pagination__arrow"
-                    onClick={nextPage}
-                    disabled={currentPage === totalPages}
+                    onClick={
+                      nextPage
+                    }
+                    disabled={
+                      currentPage ===
+                      totalPages
+                    }
                     aria-label="Page suivante"
                   >
                     →

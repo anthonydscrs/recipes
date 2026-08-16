@@ -1,6 +1,14 @@
 import './Header.css'
 
 function Header({ tab, setTab }) {
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+
+    window.location.reload()
+  }
+
   return (
     <header className="header">
       <div className="header__container">
@@ -13,9 +21,12 @@ function Header({ tab, setTab }) {
         </button>
 
         <nav className="header__nav">
+
           <button
             className={`header__link ${
-              tab === 'recettes' ? 'header__link--active' : ''
+              tab === 'recettes'
+                ? 'header__link--active'
+                : ''
             }`}
             onClick={() => setTab('recettes')}
           >
@@ -24,7 +35,9 @@ function Header({ tab, setTab }) {
 
           <button
             className={`header__link ${
-              tab === 'courses' ? 'header__link--active' : ''
+              tab === 'courses'
+                ? 'header__link--active'
+                : ''
             }`}
             onClick={() => setTab('courses')}
           >
@@ -33,13 +46,25 @@ function Header({ tab, setTab }) {
 
           <button
             className={`header__link ${
-              tab === 'planning' ? 'header__link--active' : ''
+              tab === 'planning'
+                ? 'header__link--active'
+                : ''
             }`}
             onClick={() => setTab('planning')}
           >
             Planning
           </button>
+
         </nav>
+
+        {/* DÉCONNEXION */}
+
+        <button
+          className="header__logout"
+          onClick={handleLogout}
+        >
+          Déconnexion
+        </button>
 
       </div>
     </header>

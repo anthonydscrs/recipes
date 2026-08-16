@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@ngrok/ngrok": "^1.7.0",
+    "bcrypt": "^6.0.0",
+    "jsonwebtoken": "^9.0.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2"
