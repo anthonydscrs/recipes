@@ -1,11 +1,6 @@
 import { useState, useRef } from 'react'
 import './AddRecipe.css'
 
-// TODO(auth/groupes): group_id est fixé au groupe du seed en attendant
-// l'auth. Une fois les groupes en place, remplacer par le group_id réel
-// de l'utilisateur connecté (et created_by par son user_id).
-const DEFAULT_GROUP_ID = 1
-
 const CATEGORIES = [
   { value: 'viande', label: '🥩 Viande' },
   { value: 'végé', label: '🥦 Végé' },
@@ -38,30 +33,66 @@ function AddRecipe({ onBack, onCreated }) {
 
   const fileInputRef = useRef(null)
 
+  /*
+   * =========================
+   * AUTH
+   * =========================
+   */
+
+  const getAuthUser = () => {
+    try {
+      return JSON.parse(
+        localStorage.getItem('user') || 'null'
+      )
+    } catch {
+      return null
+    }
+  }
+
+  const getToken = () => {
+    return localStorage.getItem('token')
+  }
+
+  /*
+   * =========================
+   * FORM
+   * =========================
+   */
+
   const set = (key) => (e) =>
     setForm((f) => ({
       ...f,
       [key]: e.target.value,
     }))
 
-  // Multi-sélection : clic ajoute/retire la catégorie, sans jamais
-  // pouvoir descendre à zéro (au moins une catégorie requise).
+  // Multi-sélection : au moins une catégorie
   const toggleCategory = (value) => {
     setForm((f) => {
       const has = f.category.includes(value)
 
       if (has) {
         if (f.category.length === 1) return f
-        return { ...f, category: f.category.filter((c) => c !== value) }
+
+        return {
+          ...f,
+          category: f.category.filter(
+            (c) => c !== value
+          ),
+        }
       }
 
-      return { ...f, category: [...f.category, value] }
+      return {
+        ...f,
+        category: [...f.category, value],
+      }
     })
   }
 
-  /* =========================
-     IMAGE
-     ========================= */
+  /*
+   * =========================
+   * IMAGE
+   * =========================
+   */
 
   const handleImageChange = async (e) => {
     const file = e.target.files?.[0]
@@ -79,19 +110,27 @@ function AddRecipe({ onBack, onCreated }) {
     setUploadingImage(true)
 
     try {
+      const token = getToken()
+
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/upload`,
         {
           method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           body,
         }
       )
 
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
+        const data = await res
+          .json()
+          .catch(() => ({}))
 
         throw new Error(
-          data.error || "Erreur lors de l'envoi de l'image"
+          data.error ||
+            "Erreur lors de l'envoi de l'image"
         )
       }
 
@@ -127,9 +166,11 @@ function AddRecipe({ onBack, onCreated }) {
     }
   }
 
-  /* =========================
-     SUBMIT
-     ========================= */
+  /*
+   * =========================
+   * SUBMIT
+   * =========================
+   */
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -152,6 +193,23 @@ function AddRecipe({ onBack, onCreated }) {
       return
     }
 
+    const user = getAuthUser()
+    const token = getToken()
+
+    if (!user || !token) {
+      setError(
+        'Vous devez être connecté pour ajouter une recette.'
+      )
+      return
+    }
+
+    if (!user.id || !user.groupId) {
+      setError(
+        "Les informations de l'utilisateur connecté sont incomplètes."
+      )
+      return
+    }
+
     setSubmitting(true)
     setError(null)
 
@@ -162,16 +220,18 @@ function AddRecipe({ onBack, onCreated }) {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            group_id: DEFAULT_GROUP_ID,
-            created_by: null,
+            group_id: user.groupId,
+            created_by: user.id,
 
             title: form.title.trim(),
 
             description: form.description.trim(),
 
-            image_url: form.image_url.trim() || null,
+            image_url:
+              form.image_url.trim() || null,
 
             category: form.category,
 
@@ -185,7 +245,9 @@ function AddRecipe({ onBack, onCreated }) {
       )
 
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
+        const body = await res
+          .json()
+          .catch(() => ({}))
 
         throw new Error(
           body.error ||
@@ -347,7 +409,9 @@ function AddRecipe({ onBack, onCreated }) {
             className="add-recipe__textarea"
             value={form.ingredients}
             onChange={set('ingredients')}
-            placeholder={'200 g de farine\n2 œufs\n100 ml de lait…'}
+            placeholder={
+              '200 g de farine\n2 œufs\n100 ml de lait…'
+            }
             rows={5}
             required
           />
@@ -412,7 +476,7 @@ function AddRecipe({ onBack, onCreated }) {
           </div>
         </div>
 
-        {/* CATEGORIE (multi-sélection) */}
+        {/* CATEGORIES */}
 
         <div className="add-recipe__field">
           <label className="add-recipe__label">
@@ -430,7 +494,9 @@ function AddRecipe({ onBack, onCreated }) {
                     ? 'add-recipe__toggle--active'
                     : ''
                 }`}
-                onClick={() => toggleCategory(c.value)}
+                onClick={() =>
+                  toggleCategory(c.value)
+                }
               >
                 {c.label}
               </button>
@@ -466,6 +532,7 @@ function AddRecipe({ onBack, onCreated }) {
         </button>
 
       </form>
+
     </main>
   )
 }

@@ -1,0 +1,347 @@
+
+/* =========================================
+   PAGE DE CONNEXION
+========================================= */
+
+.login-page {
+  min-height: calc(100vh - 60px);
+  min-height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 48px 24px;
+
+  background: #f8f4ee;
+
+  color: #4a4038;
+  font-family: 'Outfit', system-ui, sans-serif;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   MARQUE / LOGO
+========================================= */
+
+.login-page::before {
+  content: 'Jiji-sama';
+
+  display: block;
+
+  margin-bottom: 6px;
+
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 46px;
+  font-weight: 600;
+  line-height: 1;
+
+  letter-spacing: -0.025em;
+ margin-bottom: 36px;
+  color: #fc6532;
+}
+
+
+
+/* =========================================
+   CARTE
+========================================= */
+
+.login-form {
+  width: 100%;
+  max-width: 400px;
+
+  padding: 38px 40px 36px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #e4dcd3;
+  border-radius: 16px;
+
+  box-shadow:
+    0 8px 28px rgba(74, 64, 56, 0.07);
+
+}
+
+
+/* =========================================
+   TITRE
+========================================= */
+
+.login-form h1 {
+  margin: 0 0 8px;
+
+  color: #3f342d;
+
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 25px;
+  font-weight: 500;
+
+  line-height: 1.2;
+}
+
+
+/* Description */
+
+.login-form h1 + p {
+  margin: 0 0 30px;
+
+  color: #8b7569;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   GROUPES
+========================================= */
+
+.login-form > div {
+  margin-bottom: 20px;
+}
+
+
+/* =========================================
+   LABELS
+========================================= */
+
+.login-form label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #806e64;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+
+/* =========================================
+   INPUTS
+========================================= */
+
+.login-form input {
+  display: block;
+
+  width: 100%;
+  height: 48px;
+
+  padding: 0 15px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e1d6cc;
+  border-radius: 8px;
+
+  outline: none;
+
+  background: #fff;
+
+  color: #4a4038;
+
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 13px;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.login-form input::placeholder {
+  color: #b09f94;
+}
+
+.login-form input:hover {
+  border-color: #d2c3b8;
+}
+
+.login-form input:focus {
+  border-color: #fc6532;
+
+  box-shadow:
+    0 0 0 3px rgba(252, 101, 50, 0.10);
+}
+
+
+/* =========================================
+   ERREUR
+========================================= */
+
+.login-error {
+  margin: -4px 0 18px;
+
+  padding: 10px 12px;
+
+  border: 1px solid #e7b7b0;
+  border-radius: 7px;
+
+  background: #fff4f2;
+
+  color: #b9483d;
+
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+
+/* =========================================
+   BOUTON CONNEXION
+========================================= */
+
+.login-form button[type='submit'] {
+  width: 100%;
+  height: 47px;
+
+  margin-top: 4px;
+
+  border: 1px solid #fc6532;
+  border-radius: 8px;
+
+  background: #fc6532;
+
+  color: #ffffff;
+
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 10px rgba(252, 101, 50, 0.16);
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.login-form button[type='submit']:hover:not(:disabled) {
+  background: #f2552b;
+  border-color: #f2552b;
+
+  box-shadow:
+    0 5px 14px rgba(252, 101, 50, 0.22);
+}
+
+.login-form button[type='submit']:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.login-form button[type='submit']:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+
+/* =========================================
+   TABLETTE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .login-page {
+    padding: 40px 20px;
+  }
+
+  .login-page::before {
+    font-size: 40px;
+  }
+
+  .login-page::after {
+    margin-bottom: 30px;
+    font-size: 12px;
+  }
+
+  .login-form {
+    max-width: 390px;
+
+    padding: 34px 32px 32px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+  .login-page {
+    min-height: 100dvh;
+
+    justify-content: center;
+
+    padding: 28px 16px;
+  }
+
+  .login-page::before {
+    margin-bottom: 34px;
+
+    font-size: 34px;
+  }
+
+  .login-page::after {
+    margin-bottom: 24px;
+
+    font-size: 11.5px;
+  }
+
+  .login-form {
+    max-width: none;
+
+    padding: 28px 22px 24px;
+
+    border-radius: 13px;
+  }
+
+  .login-form h1 {
+    margin-bottom: 7px;
+
+    font-size: 22px;
+  }
+
+  .login-form h1 + p {
+    margin-bottom: 25px;
+
+    font-size: 12px;
+  }
+
+  .login-form > div {
+    margin-bottom: 17px;
+  }
+
+  .login-form label {
+    margin-bottom: 6px;
+
+    font-size: 10px;
+  }
+
+  .login-form input {
+    height: 46px;
+
+    padding: 0 13px;
+
+    font-size: 13px;
+  }
+
+  .login-form button[type='submit'] {
+    height: 45px;
+
+    margin-top: 3px;
+
+    font-size: 12px;
+  }
+}

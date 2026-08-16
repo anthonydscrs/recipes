@@ -13,9 +13,8 @@ CREATE TABLE IF NOT EXISTS groups  (
 CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   group_id INT NULL,
-  email VARCHAR(255) NOT NULL UNIQUE,
+  pseudo VARCHAR(50) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
-  pseudo VARCHAR(50) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
   FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE SET NULL
@@ -134,8 +133,19 @@ CREATE TABLE IF NOT EXISTS comments (
 INSERT INTO groups (id, name) VALUES
   (1, 'Foyer de test');
 
-INSERT INTO users (id, group_id, email, password_hash, pseudo) VALUES
-  (1, 1, 'anthony@example.com', '$2b$10$placeholderHashToReplace', 'Anthony');
+  INSERT INTO users (id, group_id, pseudo, password_hash) VALUES
+(
+  1,
+  1,
+  'Anthony',
+  '$2b$10$lq2zyUhjZv5brlrnTyWzYexAbBdVWNY.mzCzjIkhiAa7LrWWzpXWm'
+),
+(
+  2,
+  1,
+  'Emma',
+  '$2b$10$lq2zyUhjZv5brlrnTyWzYexAbBdVWNY.mzCzjIkhiAa7LrWWzpXWm'
+);
 
 INSERT INTO recipes
   (id, group_id, created_by, title, description, image_url, category, season, ingredients, preparation)

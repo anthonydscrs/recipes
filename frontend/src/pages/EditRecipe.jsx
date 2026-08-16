@@ -34,13 +34,33 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
 
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
+
   const [imagePreview, setImagePreview] = useState(
     recipe.image || recipe.image_url || ''
   )
+
   const [uploadingImage, setUploadingImage] = useState(false)
   const [imageError, setImageError] = useState(null)
 
   const fileInputRef = useRef(null)
+
+  /*
+   * ============================================
+   * AUTH
+   * ============================================
+   */
+
+  const token = localStorage.getItem('token')
+
+  const authHeaders = {
+    Authorization: `Bearer ${token}`,
+  }
+
+  /*
+   * ============================================
+   * FORM
+   * ============================================
+   */
 
   const set = (key) => (e) =>
     setForm((f) => ({
@@ -54,16 +74,27 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
 
       if (has) {
         if (f.category.length === 1) return f
-        return { ...f, category: f.category.filter((c) => c !== value) }
+
+        return {
+          ...f,
+          category: f.category.filter(
+            (c) => c !== value
+          ),
+        }
       }
 
-      return { ...f, category: [...f.category, value] }
+      return {
+        ...f,
+        category: [...f.category, value],
+      }
     })
   }
 
-  /* =========================
-     IMAGE
-     ========================= */
+  /*
+   * ============================================
+   * IMAGE
+   * ============================================
+   */
 
   const handleImageChange = async (e) => {
     const file = e.target.files?.[0]
@@ -73,9 +104,12 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
     setImageError(null)
 
     // Preview immédiate
-    setImagePreview(URL.createObjectURL(file))
+    setImagePreview(
+      URL.createObjectURL(file)
+    )
 
     const body = new FormData()
+
     body.append('image', file)
 
     setUploadingImage(true)
@@ -85,15 +119,23 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
         `${import.meta.env.VITE_BACKEND_URL}/api/upload`,
         {
           method: 'POST',
+
+          headers: {
+            ...authHeaders,
+          },
+
           body,
         }
       )
 
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
+        const data = await res
+          .json()
+          .catch(() => ({}))
 
         throw new Error(
-          data.error || "Erreur lors de l'envoi de l'image"
+          data.error ||
+            "Erreur lors de l'envoi de l'image"
         )
       }
 
@@ -105,6 +147,7 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
       }))
     } catch (err) {
       setImageError(err.message)
+
       setImagePreview('')
 
       setForm((f) => ({
@@ -129,9 +172,11 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
     }
   }
 
-  /* =========================
-     SUBMIT
-     ========================= */
+  /*
+   * ============================================
+   * SUBMIT
+   * ============================================
+   */
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -144,6 +189,7 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
       setError(
         'Titre, ingrédients et préparation sont requis.'
       )
+
       return
     }
 
@@ -151,6 +197,7 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
       setError(
         "L'image est encore en cours d'envoi, patiente un instant."
       )
+
       return
     }
 
@@ -162,15 +209,20 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
         `${import.meta.env.VITE_BACKEND_URL}/api/recipes/${recipe.id}`,
         {
           method: 'PUT',
+
           headers: {
             'Content-Type': 'application/json',
+            ...authHeaders,
           },
+
           body: JSON.stringify({
             title: form.title.trim(),
 
-            description: form.description.trim(),
+            description:
+              form.description.trim(),
 
-            image_url: form.image_url.trim() || null,
+            image_url:
+              form.image_url.trim() || null,
 
             category: form.category,
 
@@ -184,7 +236,9 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
       )
 
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
+        const body = await res
+          .json()
+          .catch(() => ({}))
 
         throw new Error(
           body.error ||
@@ -235,6 +289,7 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
         {/* TITRE */}
 
         <div className="add-recipe__field">
+
           <label className="add-recipe__label">
             Titre *
           </label>
@@ -246,11 +301,13 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
             placeholder="Ex. Tarte aux pommes normande"
             required
           />
+
         </div>
 
         {/* DESCRIPTION */}
 
         <div className="add-recipe__field">
+
           <label className="add-recipe__label">
             Description
           </label>
@@ -262,11 +319,13 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
             placeholder="Décrivez votre recette en quelques mots…"
             rows={3}
           />
+
         </div>
 
         {/* IMAGE */}
 
         <div className="add-recipe__field">
+
           <label className="add-recipe__label">
             Image
           </label>
@@ -279,6 +338,7 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
                 fileInputRef.current?.click()
               }
             >
+
               {imagePreview ? (
                 <img
                   src={imagePreview}
@@ -298,6 +358,7 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
                   Envoi…
                 </div>
               )}
+
             </div>
 
             <input
@@ -332,12 +393,15 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
               )}
 
             </div>
+
           </div>
+
         </div>
 
         {/* INGREDIENTS */}
 
         <div className="add-recipe__field">
+
           <label className="add-recipe__label">
             Ingrédients *
           </label>
@@ -354,11 +418,13 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
           <p className="add-recipe__hint">
             Un ingrédient par ligne.
           </p>
+
         </div>
 
         {/* PREPARATION */}
 
         <div className="add-recipe__field">
+
           <label className="add-recipe__label">
             Préparation *
           </label>
@@ -377,11 +443,13 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
           <p className="add-recipe__hint">
             Une étape par ligne.
           </p>
+
         </div>
 
         {/* SAISON */}
 
         <div className="add-recipe__field">
+
           <label className="add-recipe__label">
             Saison
           </label>
@@ -409,11 +477,13 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
             ))}
 
           </div>
+
         </div>
 
-        {/* CATEGORIE (multi-sélection) */}
+        {/* CATEGORIE */}
 
         <div className="add-recipe__field">
+
           <label className="add-recipe__label">
             Catégorie(s)
           </label>
@@ -429,7 +499,9 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
                     ? 'add-recipe__toggle--active'
                     : ''
                 }`}
-                onClick={() => toggleCategory(c.value)}
+                onClick={() =>
+                  toggleCategory(c.value)
+                }
               >
                 {c.label}
               </button>
@@ -440,6 +512,7 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
           <p className="add-recipe__hint">
             Sélectionne une ou plusieurs catégories.
           </p>
+
         </div>
 
         {/* ERREUR */}
@@ -465,6 +538,7 @@ function EditRecipe({ recipe, onBack, onUpdated }) {
         </button>
 
       </form>
+
     </main>
   )
 }

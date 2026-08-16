@@ -3,10 +3,6 @@ import HeartBtn from '../components/HeartBtn'
 import StarRating from '../components/StarRating'
 import './RecipeDetail.css'
 
-// TODO: group_id/added_by en dur en attendant l'auth
-const GROUP_ID = 1
-const USER_ID = 1
-
 const PLANNING_DAYS = [
   { key: 'lundi', label: 'Lundi' },
   { key: 'mardi', label: 'Mardi' },
@@ -45,9 +41,37 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
   const [addingToPlanning, setAddingToPlanning] = useState(false)
   const [addedToPlanning, setAddedToPlanning] = useState(false)
 
-  // Planning actuel
   const [planningItems, setPlanningItems] = useState([])
   const [loadingPlanning, setLoadingPlanning] = useState(false)
+
+  /*
+   * ============================================
+   * AUTH
+   * ============================================
+   */
+
+  const token = localStorage.getItem('token')
+
+  const user = JSON.parse(
+    localStorage.getItem('user') || '{}'
+  )
+
+  const USER_ID = user.id
+  const GROUP_ID = user.groupId
+
+  /*
+   * Headers utilisés pour toutes les requêtes
+   * nécessitant une authentification.
+   */
+  const authHeaders = {
+    Authorization: `Bearer ${token}`,
+  }
+
+  /*
+   * ============================================
+   * SUPPRESSION
+   * ============================================
+   */
 
   const handleDelete = async () => {
     setDeleting(true)
@@ -56,13 +80,18 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/recipes/${recipe.id}`,
-        { method: 'DELETE' }
+        {
+          method: 'DELETE',
+          headers: authHeaders,
+        }
       )
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
+
         throw new Error(
-          body.error || 'Erreur lors de la suppression de la recette'
+          body.error ||
+            'Erreur lors de la suppression de la recette'
         )
       }
 
@@ -73,6 +102,12 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
     }
   }
 
+  /*
+   * ============================================
+   * AJOUT AUX COURSES
+   * ============================================
+   */
+
   const handleAddToShoppingList = async () => {
     setAddingToList(true)
 
@@ -81,7 +116,10 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
         `${import.meta.env.VITE_BACKEND_URL}/api/shopping-list/from-recipe`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...authHeaders,
+          },
           body: JSON.stringify({
             group_id: GROUP_ID,
             added_by: USER_ID,
@@ -92,29 +130,46 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
-        throw new Error(body.error || "Erreur lors de l'ajout aux courses")
+
+        throw new Error(
+          body.error ||
+            "Erreur lors de l'ajout aux courses"
+        )
       }
 
       setAddedToList(true)
-      setTimeout(() => setAddedToList(false), 2000)
+
+      setTimeout(() => {
+        setAddedToList(false)
+      }, 2000)
     } catch (err) {
-      console.error(err)
+      console.error('Erreur ajout courses :', err)
     } finally {
       setAddingToList(false)
     }
   }
 
-  // Ouvre le sélecteur de planning et récupère le planning actuel
+  /*
+   * ============================================
+   * PLANNING
+   * ============================================
+   */
+
   const handleAddToPlanning = async () => {
     setLoadingPlanning(true)
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/planning?group_id=${GROUP_ID}`
+        `${import.meta.env.VITE_BACKEND_URL}/api/planning?group_id=${GROUP_ID}`,
+        {
+          headers: authHeaders,
+        }
       )
 
       if (!res.ok) {
-        throw new Error('Erreur lors du chargement du planning')
+        throw new Error(
+          'Erreur lors du chargement du planning'
+        )
       }
 
       const data = await res.json()
@@ -122,21 +177,32 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
       setPlanningItems(data)
       setPickingPlanningSlot(true)
     } catch (err) {
-      console.error(err)
+      console.error('Erreur chargement planning :', err)
     } finally {
       setLoadingPlanning(false)
     }
   }
 
-  // Vérifie si un créneau est déjà occupé
+  /*
+   * Vérifie si un créneau est déjà occupé
+   */
+
   const isPlanningSlotOccupied = (day, meal) => {
     return planningItems.some(
-      (item) => item.day === day && item.meal === meal
+      (item) =>
+        item.day === day &&
+        item.meal === meal
     )
   }
 
-  const handleConfirmPlanning = async (day, meal) => {
-    // Sécurité supplémentaire côté frontend
+  /*
+   * Ajoute la recette dans le créneau choisi
+   */
+
+  const handleConfirmPlanning = async (
+    day,
+    meal
+  ) => {
     if (isPlanningSlotOccupied(day, meal)) {
       return
     }
@@ -148,7 +214,10 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
         `${import.meta.env.VITE_BACKEND_URL}/api/planning`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...authHeaders,
+          },
           body: JSON.stringify({
             group_id: GROUP_ID,
             added_by: USER_ID,
@@ -161,15 +230,22 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
-        throw new Error(body.error || "Erreur lors de l'ajout au planning")
+
+        throw new Error(
+          body.error ||
+            "Erreur lors de l'ajout au planning"
+        )
       }
 
       const saved = await res.json()
 
-      // Met à jour localement le planning
       setPlanningItems((prev) => [
         ...prev.filter(
-          (item) => !(item.day === day && item.meal === meal)
+          (item) =>
+            !(
+              item.day === day &&
+              item.meal === meal
+            )
         ),
         saved,
       ])
@@ -177,18 +253,31 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
       setPickingPlanningSlot(false)
       setAddedToPlanning(true)
 
-      setTimeout(() => setAddedToPlanning(false), 2000)
+      setTimeout(() => {
+        setAddedToPlanning(false)
+      }, 2000)
     } catch (err) {
-      console.error(err)
+      console.error(
+        'Erreur ajout planning :',
+        err
+      )
     } finally {
       setAddingToPlanning(false)
     }
   }
 
+  /*
+   * ============================================
+   * CATÉGORIES
+   * ============================================
+   */
+
   const categories = Array.isArray(recipe.category)
     ? recipe.category
     : recipe.category
-      ? recipe.category.split(',').map((cat) => cat.trim())
+      ? recipe.category
+          .split(',')
+          .map((cat) => cat.trim())
       : []
 
   return (
@@ -201,12 +290,19 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
         ← TOUTES LES RECETTES
       </button>
 
-      {/* MODALE SUPPRESSION */}
+      {/* =========================================
+          MODALE SUPPRESSION
+      ========================================= */}
+
       {confirmingDelete && (
         <div className="recipe-detail__confirm-overlay">
+
           <div className="recipe-detail__confirm-box">
+
             <p className="recipe-detail__confirm-text">
-              Supprimer définitivement « {recipe.title} » ?
+              Supprimer définitivement «{' '}
+              {recipe.title}
+              » ?
               Cette action est irréversible.
             </p>
 
@@ -217,9 +313,12 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
             )}
 
             <div className="recipe-detail__confirm-actions">
+
               <button
                 className="recipe-detail__confirm-cancel"
-                onClick={() => setConfirmingDelete(false)}
+                onClick={() =>
+                  setConfirmingDelete(false)
+                }
                 disabled={deleting}
               >
                 Annuler
@@ -230,25 +329,41 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
                 onClick={handleDelete}
                 disabled={deleting}
               >
-                {deleting ? 'Suppression…' : 'Supprimer'}
+                {deleting
+                  ? 'Suppression…'
+                  : 'Supprimer'}
               </button>
+
             </div>
+
           </div>
+
         </div>
       )}
 
-      {/* MODALE PLANNING */}
+      {/* =========================================
+          MODALE PLANNING
+      ========================================= */}
+
       {pickingPlanningSlot && (
         <div
           className="recipe-detail__confirm-overlay"
-          onClick={() => setPickingPlanningSlot(false)}
+          onClick={() =>
+            setPickingPlanningSlot(false)
+          }
         >
+
           <div
             className="recipe-detail__confirm-box"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) =>
+              e.stopPropagation()
+            }
           >
+
             <p className="recipe-detail__confirm-text">
-              Ajouter « {recipe.title} » au planning — choisis un créneau disponible :
+              Ajouter « {recipe.title} » au
+              planning — choisis un créneau
+              disponible :
             </p>
 
             {PLANNING_DAYS.map((day) => (
@@ -256,16 +371,19 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
                 key={day.key}
                 className="recipe-detail__planning-row"
               >
+
                 <span className="recipe-detail__planning-day">
                   {day.label}
                 </span>
 
                 <div className="recipe-detail__planning-meals">
+
                   {PLANNING_MEALS.map((meal) => {
-                    const occupied = isPlanningSlotOccupied(
-                      day.key,
-                      meal.key
-                    )
+                    const occupied =
+                      isPlanningSlotOccupied(
+                        day.key,
+                        meal.key
+                      )
 
                     return (
                       <button
@@ -292,29 +410,43 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
                       </button>
                     )
                   })}
+
                 </div>
+
               </div>
             ))}
 
             <div className="recipe-detail__confirm-actions">
+
               <button
                 className="recipe-detail__confirm-cancel"
-                onClick={() => setPickingPlanningSlot(false)}
+                onClick={() =>
+                  setPickingPlanningSlot(false)
+                }
                 disabled={addingToPlanning}
               >
                 Annuler
               </button>
+
             </div>
+
           </div>
+
         </div>
       )}
+
+      {/* =========================================
+          CONTENU
+      ========================================= */}
 
       <div className="recipe-detail__layout">
 
         {/* COLONNE GAUCHE */}
+
         <section className="recipe-detail__main">
 
           {/* BADGES + ACTIONS MOBILE */}
+
           <div className="recipe-detail__badges-row">
 
             <div className="recipe-detail__badges">
@@ -346,25 +478,35 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
 
               <button
                 className="recipe-detail__icon-btn recipe-detail__icon-btn--cart"
-                onClick={handleAddToShoppingList}
+                onClick={
+                  handleAddToShoppingList
+                }
                 disabled={addingToList}
                 aria-label="Ajouter les ingrédients aux courses"
               >
-                {addedToList ? '✅' : '🛒'}
+                {addedToList
+                  ? '✅'
+                  : '🛒'}
               </button>
 
               <button
                 className="recipe-detail__icon-btn recipe-detail__icon-btn--planning"
-                onClick={handleAddToPlanning}
+                onClick={
+                  handleAddToPlanning
+                }
                 disabled={loadingPlanning}
                 aria-label="Ajouter au planning"
               >
-                {addedToPlanning ? '✅' : '📅'}
+                {addedToPlanning
+                  ? '✅'
+                  : '📅'}
               </button>
 
               <button
                 className="recipe-detail__icon-btn recipe-detail__icon-btn--edit"
-                onClick={() => onEdit(recipe)}
+                onClick={() =>
+                  onEdit(recipe)
+                }
                 aria-label="Modifier la recette"
               >
                 ✏️
@@ -372,7 +514,9 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
 
               <button
                 className="recipe-detail__icon-btn recipe-detail__icon-btn--delete"
-                onClick={() => setConfirmingDelete(true)}
+                onClick={() =>
+                  setConfirmingDelete(true)
+                }
                 aria-label="Supprimer la recette"
               >
                 🗑️
@@ -387,6 +531,7 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
           </h1>
 
           <div className="recipe-detail__rating">
+
             <StarRating
               rating={rating}
               onChange={setRating}
@@ -396,10 +541,13 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
             <HeartBtn
               active={isFavorite}
               onClick={() =>
-                setIsFavorite((prev) => !prev)
+                setIsFavorite(
+                  (prev) => !prev
+                )
               }
               size={22}
             />
+
           </div>
 
           <p className="recipe-detail__description">
@@ -412,12 +560,15 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
             className="recipe-detail__image"
           />
 
-          {/* ACTIONS SOUS LA PHOTO - PC */}
+          {/* ACTIONS PC */}
+
           <div className="recipe-detail__footer-actions">
 
             <button
               className="recipe-detail__action recipe-detail__action--cart"
-              onClick={handleAddToShoppingList}
+              onClick={
+                handleAddToShoppingList
+              }
               disabled={addingToList}
             >
               <span className="recipe-detail__action-icon">
@@ -435,7 +586,9 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
 
             <button
               className="recipe-detail__action recipe-detail__action--planning"
-              onClick={handleAddToPlanning}
+              onClick={
+                handleAddToPlanning
+              }
               disabled={loadingPlanning}
             >
               <span className="recipe-detail__action-icon">
@@ -451,7 +604,9 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
 
             <button
               className="recipe-detail__action recipe-detail__action--edit"
-              onClick={() => onEdit(recipe)}
+              onClick={() =>
+                onEdit(recipe)
+              }
             >
               <span className="recipe-detail__action-icon">
                 ✏️
@@ -464,7 +619,9 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
 
             <button
               className="recipe-detail__action recipe-detail__action--delete"
-              onClick={() => setConfirmingDelete(true)}
+              onClick={() =>
+                setConfirmingDelete(true)
+              }
             >
               <span className="recipe-detail__action-icon">
                 🗑️
@@ -480,6 +637,7 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
         </section>
 
         {/* COLONNE DROITE */}
+
         <section className="recipe-detail__card">
 
           <div className="recipe-detail__tabs">
@@ -491,10 +649,14 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
                   : ''
               }`}
               onClick={() =>
-                setActiveTab('ingredients')
+                setActiveTab(
+                  'ingredients'
+                )
               }
             >
-              INGRÉDIENTS ({recipe.ingredients.length})
+              INGRÉDIENTS (
+              {recipe.ingredients.length}
+              )
             </button>
 
             <button
@@ -504,7 +666,9 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
                   : ''
               }`}
               onClick={() =>
-                setActiveTab('preparation')
+                setActiveTab(
+                  'preparation'
+                )
               }
             >
               PRÉPARATION
@@ -524,7 +688,9 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
                       key={index}
                     >
                       <span>−</span>
-                      <p>{ingredient}</p>
+                      <p>
+                        {ingredient}
+                      </p>
                     </div>
                   )
                 )}
@@ -541,7 +707,10 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
                       className="recipe-detail__step"
                       key={index}
                     >
-                      <span>{index + 1}</span>
+                      <span>
+                        {index + 1}
+                      </span>
+
                       <p>{step}</p>
                     </div>
                   )
