@@ -30,6 +30,15 @@ function Header({ tab, setTab }) {
           >
             Liste de courses
           </button>
+
+          <button
+            className={`header__link ${
+              tab === 'planning' ? 'header__link--active' : ''
+            }`}
+            onClick={() => setTab('planning')}
+          >
+            Planning
+          </button>
         </nav>
 
       </div>

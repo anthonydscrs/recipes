@@ -99,6 +99,101 @@ html, body, #root {
   transform: translateY(0);
 }
 
+/* =========================
+   PAGINATION
+========================= */
+
+.recipes-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+
+  margin: 36px 0 20px;
+}
+
+.recipes-pagination__pages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* Boutons */
+
+.recipes-pagination__page,
+.recipes-pagination__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+
+  color: #9a8a7c;
+
+  cursor: pointer;
+
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+/* Numéros */
+
+.recipes-pagination__page {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+
+.recipes-pagination__page:hover {
+  background: #f7f1e8;
+  color: #4a4038;
+}
+
+/* Page active */
+
+.recipes-pagination__page--active {
+  background: #4a4038;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.recipes-pagination__page--active:hover {
+  background: #4a4038;
+  color: #ffffff;
+}
+
+/* Flèches */
+
+.recipes-pagination__arrow {
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid #e6ded5;
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  font-size: 16px;
+  color: #7a6a5c;
+}
+
+.recipes-pagination__arrow:hover:not(:disabled) {
+  background: #f7f1e8;
+  border-color: #d6cabc;
+  color: #4a4038;
+}
+
+.recipes-pagination__arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
 
 
 @media (max-width: 768px) {
@@ -113,7 +208,8 @@ html, body, #root {
   }
 
   .recipes-grid {
-    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 }
 
@@ -159,5 +255,33 @@ html, body, #root {
 
   .recipes-grid {
     gap: 16px;
+  }
+}
+
+/* =========================
+   PAGINATION — MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .recipes-pagination {
+    gap: 10px;
+    margin: 26px 0 10px;
+  }
+
+  .recipes-pagination__pages {
+    gap: 2px;
+  }
+
+  .recipes-pagination__page {
+    width: 30px;
+    height: 30px;
+    font-size: 11px;
+  }
+
+  .recipes-pagination__arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
   }
 }

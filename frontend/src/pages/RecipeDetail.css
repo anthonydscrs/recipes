@@ -29,7 +29,7 @@
 }
 
 /* =========================
-   CONFIRMATION SUPPRESSION
+   CONFIRMATION SUPPRESSION / POPOVER PLANNING
 ========================= */
 
 .recipe-detail__confirm-overlay {
@@ -49,6 +49,8 @@
 .recipe-detail__confirm-box {
   width: 100%;
   max-width: 380px;
+  max-height: 80vh;
+  overflow-y: auto;
 
   padding: 24px;
 
@@ -56,6 +58,60 @@
   border-radius: 14px;
 
   box-shadow: 0 10px 30px rgba(80, 60, 40, 0.2);
+}
+
+.recipe-detail__planning-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 8px 0;
+  border-bottom: 1px solid #f0e9df;
+}
+
+.recipe-detail__planning-row:last-of-type {
+  border-bottom: none;
+}
+
+.recipe-detail__planning-day {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4a3327;
+  flex-shrink: 0;
+  width: 78px;
+}
+
+.recipe-detail__planning-meals {
+  display: flex;
+  gap: 6px;
+}
+
+.recipe-detail__planning-meal-btn {
+  padding: 6px 10px;
+
+  background: #f7f1e8;
+  border: 1px solid #e6ded5;
+  border-radius: 6px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #4a4038;
+
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.recipe-detail__planning-meal-btn:hover:not(:disabled) {
+  background: #eaf2f7;
+  border-color: #7FB5D1;
+}
+
+.recipe-detail__planning-meal-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .recipe-detail__confirm-text {
@@ -124,6 +180,42 @@
 
 .recipe-detail__confirm-cancel:disabled,
 .recipe-detail__confirm-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.recipe-detail__planning-days {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+
+  margin-bottom: 16px;
+}
+
+.recipe-detail__planning-day-btn {
+  padding: 9px 12px;
+
+  background: #ffffff;
+  border: 1px solid #e6ded5;
+  border-radius: 8px;
+
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4a4038;
+
+  cursor: pointer;
+
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.recipe-detail__planning-day-btn:hover:not(:disabled) {
+  background: #eaf4fa;
+  border-color: #65a8d0;
+  color: #65a8d0;
+}
+
+.recipe-detail__planning-day-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -244,7 +336,6 @@
   border-color: #a83b3b;
 }
 
-
 .recipe-detail__icon-btn--cart {
   background: #4a9b6e;
   border-color: #4a9b6e;
@@ -351,7 +442,6 @@
 
 /* =========================
    ACTIONS SOUS LA PHOTO (PC uniquement)
-   plus tard : Ajouter aux courses / Ajouter au planning
 ========================= */
 
 .recipe-detail__footer-actions {
@@ -402,6 +492,28 @@
   background: #f6e7e7;
   border-color: #a83b3b;
   color: #a83b3b;
+}
+
+.recipe-detail__action--cart {
+  background: #4a9b6e;
+  border-color: #4a9b6e;
+  color: #ffffff;
+}
+
+.recipe-detail__action--cart:hover:not(:disabled) {
+  background: #3f8760;
+  border-color: #3f8760;
+}
+
+.recipe-detail__action--cart:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.recipe-detail__action--planning:hover {
+  background: #eaf4fa;
+  border-color: #65a8d0;
+  color: #65a8d0;
 }
 
 /* =========================
