@@ -44,7 +44,7 @@ const login = async (pseudo, password) => {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: '7d',
+      expiresIn: process.env.JWT_TIMING || '7d',
     }
   )
 

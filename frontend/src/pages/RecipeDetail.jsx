@@ -52,13 +52,6 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
 
   const token = localStorage.getItem('token')
 
-  const user = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  )
-
-  const USER_ID = user.id
-  const GROUP_ID = user.groupId
-
   /*
    * Headers utilisés pour toutes les requêtes
    * nécessitant une authentification.
@@ -121,8 +114,6 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
             ...authHeaders,
           },
           body: JSON.stringify({
-            group_id: GROUP_ID,
-            added_by: USER_ID,
             recipe_id: recipe.id,
           }),
         }
@@ -160,7 +151,7 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/planning?group_id=${GROUP_ID}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/planning`,
         {
           headers: authHeaders,
         }
@@ -219,8 +210,6 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted }) {
             ...authHeaders,
           },
           body: JSON.stringify({
-            group_id: GROUP_ID,
-            added_by: USER_ID,
             recipe_id: recipe.id,
             day,
             meal,

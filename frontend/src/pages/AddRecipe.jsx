@@ -223,9 +223,6 @@ function AddRecipe({ onBack, onCreated }) {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            group_id: user.groupId,
-            created_by: user.id,
-
             title: form.title.trim(),
 
             description: form.description.trim(),

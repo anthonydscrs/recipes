@@ -49,17 +49,9 @@ function ShoppingList() {
       return
     }
 
-    if (!user.groupId) {
-      setError(
-        "Le groupe de l'utilisateur connecté est introuvable."
-      )
-      setLoading(false)
-      return
-    }
-
     const fetchList = () => {
       fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/shopping-list?group_id=${user.groupId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/shopping-list`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -119,8 +111,6 @@ function ShoppingList() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          group_id: user.groupId,
-          added_by: user.id,
           label: label.trim(),
         }),
       }
@@ -276,7 +266,7 @@ function ShoppingList() {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/shopping-list?group_id=${user.groupId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/shopping-list`,
         {
           method: 'DELETE',
           headers: {
