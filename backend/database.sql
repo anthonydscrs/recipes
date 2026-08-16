@@ -76,6 +76,24 @@ CREATE TABLE IF NOT EXISTS notes (
 );
 
 -- ============================================
+-- RATINGS (note en étoiles, personnelle par user, sur une recette)
+-- ============================================
+CREATE TABLE IF NOT EXISTS ratings (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  recipe_id INT NOT NULL,
+  value TINYINT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+
+  UNIQUE (user_id, recipe_id),
+  CHECK (value BETWEEN 1 AND 5)
+);
+
+-- ============================================
 -- SHOPPING LIST (partagée par groupe, persiste)
 -- ============================================
 CREATE TABLE IF NOT EXISTS shopping_list_items (

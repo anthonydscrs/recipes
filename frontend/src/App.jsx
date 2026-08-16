@@ -51,15 +51,15 @@ function App() {
 
     const token = localStorage.getItem('token')
 
-    fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/recipes`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-      .then((res) => {
+    const authHeaders = {
+      Authorization: `Bearer ${token}`,
+    }
+
+    Promise.all([
+      fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/recipes`,
+        { headers: authHeaders }
+      ).then((res) => {
         if (!res.ok) {
           throw new Error(
             'Erreur lors du chargement des recettes'
@@ -67,9 +67,32 @@ function App() {
         }
 
         return res.json()
-      })
-      .then((data) => {
-        setRecipes(data)
+      }),
+
+      fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/favorites`,
+        { headers: authHeaders }
+      ).then((res) => {
+        if (!res.ok) {
+          throw new Error(
+            'Erreur lors du chargement des favoris'
+          )
+        }
+
+        return res.json()
+      }),
+    ])
+      .then(([recipesData, favoritesData]) => {
+        setRecipes(recipesData)
+
+        setFavoriteIds(
+          new Set(
+            favoritesData.map(
+              (recipe) => recipe.id
+            )
+          )
+        )
+
         setError(null)
       })
       .catch((err) => {
@@ -96,10 +119,14 @@ function App() {
   // ============================================
 
   const toggleFavorite = (id) => {
+    const token = localStorage.getItem('token')
+    const wasFavorite = favoriteIds.has(id)
+
+    // Mise à jour immédiate de l'interface
     setFavoriteIds((prev) => {
       const next = new Set(prev)
 
-      if (next.has(id)) {
+      if (wasFavorite) {
         next.delete(id)
       } else {
         next.add(id)
@@ -107,6 +134,55 @@ function App() {
 
       return next
     })
+
+    const request = wasFavorite
+      ? fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/favorites/${id}`,
+          {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+      : fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/favorites`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              recipe_id: id,
+            }),
+          }
+        )
+
+    request
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(
+            'Erreur lors de la mise à jour des favoris'
+          )
+        }
+      })
+      .catch((err) => {
+        console.error(err)
+
+        // Annule la modification locale si le backend échoue
+        setFavoriteIds((prev) => {
+          const next = new Set(prev)
+
+          if (wasFavorite) {
+            next.add(id)
+          } else {
+            next.delete(id)
+          }
+
+          return next
+        })
+      })
   }
 
   const recipesWithFavorite = recipes.map(
