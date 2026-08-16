@@ -68,6 +68,11 @@
   height: 60px;
   padding: 0 20px;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
   border: none;
   border-bottom: 2px solid transparent;
 
@@ -87,6 +92,29 @@
   transition:
     background-color 0.15s ease,
     color 0.15s ease;
+}
+
+/* Icônes */
+
+.header__icon {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+/* Couleur de chaque fonctionnalité */
+
+.header__link:nth-child(1) .header__icon {
+  color: #f7bb23;
+}
+
+.header__link:nth-child(2) .header__icon {
+  color: #0e4b26;
+}
+
+.header__link:nth-child(3) .header__icon {
+  color: #34145f;
 }
 
 .header__link:hover {
@@ -189,35 +217,54 @@
 
   .header__container {
     height: 52px;
-    padding: 0 10px;
+    padding: 0 14px;
     gap: 0;
   }
 
   /* Logo */
 
-  .header__logo {
-    font-size: 20px;
-    margin-right: 8px;
-  }
+.header__logo {
+  font-size: 20px;
+  margin-right: 35px;
+}
 
   /* Navigation */
 
   .header__nav {
     height: 52px;
+    justify-content: flex-start;
+    gap: 4px;
   }
 
   .header__link {
+    width: 42px;
     height: 52px;
-    padding: 0 9px;
-    font-size: 11px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0;
+  }
+
+  .header__link span {
+    display: none;
+  }
+
+  .header__icon {
+    width: 20px;
+    height: 20px;
   }
 
   /* Déconnexion */
 
   .header__logout {
-    margin-left: 5px;
+    margin-left: auto;
     padding: 5px 7px;
+
     border-radius: 6px;
+
     font-size: 0;
   }
 

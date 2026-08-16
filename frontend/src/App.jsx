@@ -193,6 +193,23 @@ function App() {
   )
 
   // ============================================
+  // NOTE (RATING)
+  // ============================================
+  // Propage la note personnelle mise à jour depuis RecipeDetail
+  // vers la liste des recettes, pour que RecipeCard reflète le
+  // changement immédiatement (sans reload), comme les favoris.
+
+  const updateRecipeRating = (id, value) => {
+    setRecipes((prev) =>
+      prev.map((recipe) =>
+        recipe.id === id
+          ? { ...recipe, rating: value }
+          : recipe
+      )
+    )
+  }
+
+  // ============================================
   // FILTRES
   // ============================================
 
@@ -312,6 +329,9 @@ function App() {
           }
           onToggleFavorite={() =>
             toggleFavorite(recipe.id)
+          }
+          onRatingChange={(value) =>
+            updateRecipeRating(recipe.id, value)
           }
           onEdit={(recipeToEdit) =>
             setEditingRecipe(recipeToEdit)

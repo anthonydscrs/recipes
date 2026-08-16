@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import FilterBar from '../components/FilterBar'
 import { useRecipeFilters } from '../hooks/useRecipeFilters'
+import defaultRecipeImage from '../assets/chat.JPG'
 import './Planning.css'
 
 const DAYS = [
@@ -131,13 +132,15 @@ function Planning({ recipes, onSelectRecipe }) {
               : null
           }
         >
-          {item.recipe_image && (
-            <img
-              src={item.recipe_image}
-              alt={item.recipe_title}
-              className="planning-slot__image"
-            />
-          )}
+          <img
+            src={item.recipe_image || defaultRecipeImage}
+            alt={item.recipe_title}
+            className={`planning-slot__image ${
+              !item.recipe_image
+                ? 'planning-slot__image--fallback'
+                : ''
+            }`}
+          />
 
           <span className="planning-slot__title">
             {item.recipe_title}
@@ -336,10 +339,6 @@ function Planning({ recipes, onSelectRecipe }) {
   return (
     <main className="planning-page">
 
-      {/* ========================================
-          HEADER
-      ======================================== */}
-
       <div className="planning-header">
 
         <div>
@@ -373,10 +372,6 @@ function Planning({ recipes, onSelectRecipe }) {
 
       </div>
 
-      {/* ========================================
-          LOADING / ERROR
-      ======================================== */}
-
       {loading && <p>Chargement…</p>}
 
       {error && (
@@ -387,10 +382,6 @@ function Planning({ recipes, onSelectRecipe }) {
 
       {!loading && !error && (
         <>
-          {/* ====================================
-              DESKTOP / TABLETTE
-          ==================================== */}
-
           <div className="planning-grid-wrapper planning-grid-wrapper--desktop">
 
             <table className="planning-grid">
@@ -448,10 +439,6 @@ function Planning({ recipes, onSelectRecipe }) {
             </table>
 
           </div>
-
-          {/* ====================================
-              MOBILE
-          ==================================== */}
 
           <div className="planning-grid-wrapper planning-grid-wrapper--mobile">
 
@@ -514,10 +501,6 @@ function Planning({ recipes, onSelectRecipe }) {
           </div>
         </>
       )}
-
-      {/* ========================================
-          MODALE CHOIX RECETTE
-      ======================================== */}
 
       {pickingSlot && (
         <div
@@ -584,12 +567,15 @@ function Planning({ recipes, onSelectRecipe }) {
                     }
                   >
 
-                    {recipe.image && (
-                      <img
-                        src={recipe.image}
-                        alt={recipe.title}
-                      />
-                    )}
+                    <img
+                      src={recipe.image || defaultRecipeImage}
+                      alt={recipe.title}
+                      className={
+                        !recipe.image
+                          ? 'planning-picker-item__image--fallback'
+                          : ''
+                      }
+                    />
 
                     <span>
                       {recipe.title}
@@ -612,10 +598,6 @@ function Planning({ recipes, onSelectRecipe }) {
 
         </div>
       )}
-
-      {/* ========================================
-          CONFIRMATION SUPPRESSION
-      ======================================== */}
 
       {confirmingRemove && (
         <div className="planning-confirm-overlay">
@@ -656,10 +638,6 @@ function Planning({ recipes, onSelectRecipe }) {
 
         </div>
       )}
-
-      {/* ========================================
-          CONFIRMATION VIDER
-      ======================================== */}
 
       {confirmingClear && (
         <div className="planning-confirm-overlay">

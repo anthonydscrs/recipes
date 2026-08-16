@@ -1,4 +1,9 @@
 import './Header.css'
+import {
+  Utensils,
+  ShoppingCart,
+  CalendarDays
+} from 'lucide-react'
 
 function Header({ tab, setTab }) {
 
@@ -30,7 +35,8 @@ function Header({ tab, setTab }) {
             }`}
             onClick={() => setTab('recettes')}
           >
-            Recettes
+            <Utensils className="header__icon" />
+            <span>Recettes</span>
           </button>
 
           <button
@@ -41,7 +47,8 @@ function Header({ tab, setTab }) {
             }`}
             onClick={() => setTab('courses')}
           >
-            Liste de courses
+            <ShoppingCart className="header__icon" />
+            <span>Liste de courses</span>
           </button>
 
           <button
@@ -52,12 +59,11 @@ function Header({ tab, setTab }) {
             }`}
             onClick={() => setTab('planning')}
           >
-            Planning
+            <CalendarDays className="header__icon" />
+            <span>Planning</span>
           </button>
 
         </nav>
-
-        {/* DÉCONNEXION */}
 
         <button
           className="header__logout"

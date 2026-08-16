@@ -185,6 +185,10 @@
   flex-shrink: 0;
 }
 
+.planning-slot__image--fallback {
+  object-position: center 25%;
+}
+
 .planning-slot__title {
   font-size: 12px;
   font-weight: 500;
@@ -298,11 +302,6 @@
   border-bottom: 1px solid #e6ded5;
 }
 
-/*
-  Le FilterBar est utilisé ici dans un espace
-  beaucoup plus petit que sur la page principale.
-*/
-
 .planning-picker-filters .filter-bar {
   width: 100%;
 }
@@ -315,14 +314,10 @@
   width: 100%;
 }
 
-/* La recherche prend tout l'espace disponible */
-
 .planning-picker-filters .search-bar {
   flex: 1;
   min-width: 0;
 }
-
-/* Favoris et Filtres restent à leur taille naturelle */
 
 .planning-picker-filters .filter-bar__fav-btn,
 .planning-picker-filters .filter-bar__toggle {
@@ -330,14 +325,10 @@
   white-space: nowrap;
 }
 
-/* Panneau ouvert */
-
 .planning-picker-filters .filter-bar__panel {
   margin-top: 10px;
   padding: 12px 0 2px;
 }
-
-/* Ligne Saison / Catégorie */
 
 .planning-picker-filters .filter-bar__filter-row {
   display: flex;
@@ -345,15 +336,11 @@
   gap: 12px;
 }
 
-/* Label Saison / Catégorie */
-
 .planning-picker-filters .filter-bar__label {
   flex-shrink: 0;
   min-width: 65px;
   padding-top: 6px;
 }
-
-/* Les boutons peuvent passer à la ligne */
 
 .planning-picker-filters .filter-bar__pills {
   display: flex;
@@ -403,6 +390,10 @@
 
   object-fit: cover;
   flex-shrink: 0;
+}
+
+.planning-picker-item__image--fallback {
+  object-position: center 25%;
 }
 
 .planning-picker-item span {
@@ -588,11 +579,6 @@
     padding-left: 9px;
     padding-right: 9px;
   }
-
-  /*
-    Sur très petit écran, les filtres
-    passent proprement sous la recherche.
-  */
 
   .planning-picker-filters .filter-bar__filter-row {
     flex-direction: column;

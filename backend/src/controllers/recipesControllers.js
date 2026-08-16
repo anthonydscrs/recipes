@@ -24,26 +24,22 @@ const formatRecipe = (r) => ({
   category: r.category ? r.category.split(",") : [],
   ingredients: r.ingredients.split("\n"),
   preparation: r.preparation.split("\n"),
-  rating_average: r.rating_average
-    ? Math.round(Number(r.rating_average) * 10) / 10
-    : 0,
-  rating_count: r.rating_count ?? 0,
+  rating: r.rating ?? null,
 });
 
 const getAllRecipes = async (req, res) => {
   try {
     const groupId = req.user.groupId;
+    const userId = req.user.id;
 
     const [rows] = await pool.query(
       `SELECT
          r.*,
-         AVG(ra.value) AS rating_average,
-         COUNT(ra.value) AS rating_count
+         ra.value AS rating
        FROM recipes r
-       LEFT JOIN ratings ra ON ra.recipe_id = r.id
-       WHERE r.group_id = ?
-       GROUP BY r.id`,
-      [groupId]
+       LEFT JOIN ratings ra ON ra.recipe_id = r.id AND ra.user_id = ?
+       WHERE r.group_id = ?`,
+      [userId, groupId]
     );
     res.json(rows.map(formatRecipe));
   } catch (err) {
@@ -55,17 +51,16 @@ const getAllRecipes = async (req, res) => {
 const getRecipeById = async (req, res) => {
   try {
     const groupId = req.user.groupId;
+    const userId = req.user.id;
 
     const [rows] = await pool.query(
       `SELECT
          r.*,
-         AVG(ra.value) AS rating_average,
-         COUNT(ra.value) AS rating_count
+         ra.value AS rating
        FROM recipes r
-       LEFT JOIN ratings ra ON ra.recipe_id = r.id
-       WHERE r.id = ? AND r.group_id = ?
-       GROUP BY r.id`,
-      [req.params.id, groupId]
+       LEFT JOIN ratings ra ON ra.recipe_id = r.id AND ra.user_id = ?
+       WHERE r.id = ? AND r.group_id = ?`,
+      [userId, req.params.id, groupId]
     );
     if (rows.length === 0) {
       return res.status(404).json({ error: "Recette introuvable" });

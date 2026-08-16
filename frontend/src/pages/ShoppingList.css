@@ -115,8 +115,43 @@
 }
 
 .shopping-empty {
-  color: #B8A898;
-  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-top: 78px;
+
+  text-align: center;
+}
+
+.shopping-empty__cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 18px;
+}
+
+.shopping-empty__title {
+  margin: 0 0 8px;
+
+  color: #806e64;
+
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.shopping-empty__text {
+  max-width: 520px;
+
+  margin: 0;
+
+  color: #a08d82;
+
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 /* =========================
