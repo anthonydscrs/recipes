@@ -532,12 +532,11 @@ function ShoppingList() {
               </div>
 
               <p className="shopping-empty__title">
-                Votre panier est vide
+                Plus de pâtéeeeeeee
               </p>
 
               <p className="shopping-empty__text">
-                Ajoutez des ingrédients ou utilisez
-                "Ajouter aux courses" depuis une recette.
+                Nourris le chaton de combat ou bagarre yaaaaaaah
               </p>
 
             </div>

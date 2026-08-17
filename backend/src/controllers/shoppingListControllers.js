@@ -103,6 +103,74 @@ const addFromRecipe = async (req, res) => {
   }
 };
 
+// POST /api/shopping-list/from-planning
+// Éclate les ingrédients de toutes les recettes prévues dans le planning de
+// la semaine (planning_items) et les ajoute à la liste de courses du
+// groupe. Les lignes d'ingrédients identiques (texte strictement égal),
+// même venant de recettes différentes, ne sont ajoutées qu'une seule fois
+// pour éviter les doublons (ex. "Sel et poivre" répété à chaque recette).
+const addFromPlanning = async (req, res) => {
+  try {
+    const groupId = req.user.groupId;
+    const addedBy = req.user.id;
+
+    const [rows] = await pool.query(
+      `SELECT DISTINCT r.ingredients
+       FROM planning_items p
+       JOIN recipes r ON r.id = p.recipe_id
+       WHERE p.group_id = ?`,
+      [groupId]
+    );
+
+    if (rows.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Le planning est vide, rien à ajouter" });
+    }
+
+    const seen = new Set();
+    const labels = [];
+
+    for (const row of rows) {
+      const ingredients = row.ingredients
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean);
+
+      for (const label of ingredients) {
+        if (!seen.has(label)) {
+          seen.add(label);
+          labels.push(label);
+        }
+      }
+    }
+
+    if (labels.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Aucun ingrédient à ajouter" });
+    }
+
+    const values = labels.map((label) => [groupId, addedBy, label]);
+    await pool.query(
+      "INSERT INTO shopping_list_items (group_id, added_by, label) VALUES ?",
+      [values]
+    );
+
+    const [items] = await pool.query(
+      `SELECT * FROM shopping_list_items
+       WHERE group_id = ?
+       ORDER BY is_checked ASC, created_at DESC`,
+      [groupId]
+    );
+
+    res.status(201).json(items);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+};
+
 // PATCH /api/shopping-list/:id  { is_checked }
 const toggleItem = async (req, res) => {
   try {
@@ -174,6 +242,7 @@ module.exports = {
   getShoppingList,
   addItem,
   addFromRecipe,
+  addFromPlanning,
   toggleItem,
   deleteItem,
   clearList,

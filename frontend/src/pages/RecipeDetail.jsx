@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import HeartBtn from '../components/HeartBtn'
 import StarRating from '../components/StarRating'
+import CommentSection from '../components/CommentSection'
 import chat from '../assets/chat.jpg'
 import { useToast } from '../contexts/ToastContext'
 import './RecipeDetail.css'
@@ -689,6 +690,8 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted, onToggleFavorite, onR
 
         {/* COLONNE DROITE */}
 
+        <div className="recipe-detail__side">
+
         <section className="recipe-detail__card">
 
           <div className="recipe-detail__tabs">
@@ -773,6 +776,16 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted, onToggleFavorite, onR
           </div>
 
         </section>
+
+        {/* COMMENTAIRES
+            PC : sous la carte ingrédients/préparation, colonne de droite
+            Mobile : tout en bas, sous les boutons d'action (voir CSS) */}
+
+        <section className="recipe-detail__comments">
+          <CommentSection recipeId={recipe.id} />
+        </section>
+
+        </div>
 
       </div>
 

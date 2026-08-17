@@ -3,6 +3,7 @@ const {
   getShoppingList,
   addItem,
   addFromRecipe,
+  addFromPlanning,
   toggleItem,
   deleteItem,
   clearList,
@@ -13,6 +14,7 @@ const router = express.Router();
 router.get("/", getShoppingList);
 router.post("/", addItem);
 router.post("/from-recipe", addFromRecipe);
+router.post("/from-planning", addFromPlanning);
 router.patch("/:id", toggleItem);
 router.delete("/:id", deleteItem);
 router.delete("/", clearList);

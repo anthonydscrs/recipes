@@ -147,8 +147,7 @@
   border-radius: 7px;
 
   background: #c9574b;
-
-  color: #fff;
+  color: #ffffff;
 
   font-family: 'Outfit', system-ui, sans-serif;
   font-size: 11px;
@@ -159,15 +158,25 @@
   white-space: nowrap;
   flex-shrink: 0;
 
+  appearance: none;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+
   transition:
     background-color 0.15s ease,
     border-color 0.15s ease,
     transform 0.15s ease;
 }
 
-.header__logout::before {
-  content: '↪';
-  font-size: 13px;
+.header__logout-icon {
+  width: 15px;
+  height: 15px;
+
+  color: #ffffff;
+  stroke: #ffffff;
+
+  stroke-width: 2.2;
+  flex-shrink: 0;
 }
 
 .header__logout:hover {
@@ -176,7 +185,14 @@
 }
 
 .header__logout:active {
+  background: #b9483d;
+  border-color: #b9483d;
   transform: scale(0.97);
+}
+
+.header__logout:focus,
+.header__logout:focus-visible {
+  outline: none;
 }
 /* =========================================
    TABLETTE
@@ -259,16 +275,39 @@
 
   /* Déconnexion */
 
-  .header__logout {
-    margin-left: auto;
-    padding: 5px 7px;
+.header__logout {
+  margin-left: auto;
+  padding: 5px 7px;
 
-    border-radius: 6px;
+  width: 30px;
+  height: 30px;
 
-    font-size: 0;
-  }
+  border-radius: 6px;
 
-  .header__logout::before {
-    font-size: 13px;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #c9574b;
+  border: 1px solid #c9574b;
+
+  color: #ffffff;
+
+  font-size: 0;
+
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.header__logout span {
+  display: none;
+}
+
+.header__logout-icon {
+  width: 15px;
+  height: 15px;
+
+  color: #ffffff;
+  stroke: #ffffff;
+}
 }
