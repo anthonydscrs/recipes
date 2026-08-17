@@ -10,6 +10,7 @@ const uploadRouter = require("./routes/uploadRoutes");
 const shoppingListRouter = require("./routes/shoppingListRoutes");
 const planningRouter = require("./routes/planningRoutes");
 const ratingsRouter = require("./routes/ratingsRoutes");
+const commentsRouter = require("./routes/commentsRoutes");
 const authRoutes = require("./routes/authRoutes");
 
 const app = express();
@@ -49,6 +50,7 @@ app.use("/api/upload", uploadRouter);
 app.use("/api/shopping-list", shoppingListRouter);
 app.use("/api/planning", planningRouter);
 app.use("/api/ratings", ratingsRouter);
+app.use("/api/comments", commentsRouter);
 
 // ============================================
 // GESTION DES ERREURS

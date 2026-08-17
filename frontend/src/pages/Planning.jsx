@@ -21,7 +21,7 @@ const MEALS = [
 ]
 
 function Planning({ recipes, onSelectRecipe }) {
-  const { showError } = useToast()
+  const { showError, showToast } = useToast()
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -34,6 +34,8 @@ function Planning({ recipes, onSelectRecipe }) {
   const [confirmingClear, setConfirmingClear] = useState(false)
   const [clearing, setClearing] = useState(false)
   const [clearError, setClearError] = useState(null)
+
+  const [generatingList, setGeneratingList] = useState(false)
 
   const pickerFilters = useRecipeFilters(recipes ?? [])
 
@@ -342,6 +344,51 @@ function Planning({ recipes, onSelectRecipe }) {
 
   /*
    * ============================================
+   * GÉNÉRER LA LISTE DE COURSES DEPUIS LE PLANNING
+   * ============================================
+   */
+
+  const handleGenerateShoppingList = async () => {
+    setGeneratingList(true)
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/shopping-list/from-planning`,
+        {
+          method: 'POST',
+          headers: authHeaders,
+        }
+      )
+
+      const data = await res.json().catch(() => ({}))
+
+      if (!res.ok) {
+        throw new Error(
+          data.error ||
+            "Erreur lors de la génération de la liste de courses"
+        )
+      }
+
+      showToast(
+        'Liste de courses générée depuis le planning !',
+        { type: 'success' }
+      )
+    } catch (err) {
+      console.error(
+        'Erreur génération liste de courses :',
+        err
+      )
+      showError(
+        err.message ||
+          "La liste de courses n'a pas pu être générée."
+      )
+    } finally {
+      setGeneratingList(false)
+    }
+  }
+
+  /*
+   * ============================================
    * RENDER
    * ============================================
    */
@@ -363,22 +410,45 @@ function Planning({ recipes, onSelectRecipe }) {
           </p>
         </div>
 
-        <button
-          className="planning-clear-btn"
-          onClick={() =>
-            setConfirmingClear(true)
-          }
-          disabled={items.length === 0}
-          aria-label="Tout supprimer"
-        >
-          <span className="planning-clear-btn__icon">
-            🗑️
-          </span>
+        <div className="planning-header__actions">
 
-          <span className="planning-clear-btn__label">
-            Tout supprimer
-          </span>
-        </button>
+          <button
+            className="planning-generate-btn"
+            onClick={handleGenerateShoppingList}
+            disabled={
+              generatingList || items.length === 0
+            }
+            aria-label="Générer la liste de courses depuis le planning"
+          >
+            <span className="planning-generate-btn__icon">
+              🛒
+            </span>
+
+            <span className="planning-generate-btn__label">
+              {generatingList
+                ? 'Génération…'
+                : 'Générer la liste de courses'}
+            </span>
+          </button>
+
+          <button
+            className="planning-clear-btn"
+            onClick={() =>
+              setConfirmingClear(true)
+            }
+            disabled={items.length === 0}
+            aria-label="Tout supprimer"
+          >
+            <span className="planning-clear-btn__icon">
+              🗑️
+            </span>
+
+            <span className="planning-clear-btn__label">
+              Tout supprimer
+            </span>
+          </button>
+
+        </div>
 
       </div>
 

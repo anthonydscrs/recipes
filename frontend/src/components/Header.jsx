@@ -2,7 +2,8 @@ import './Header.css'
 import {
   Utensils,
   ShoppingCart,
-  CalendarDays
+  CalendarDays,
+   LogOut
 } from 'lucide-react'
 
 function Header({ tab, setTab }) {
@@ -65,12 +66,14 @@ function Header({ tab, setTab }) {
 
         </nav>
 
-        <button
-          className="header__logout"
-          onClick={handleLogout}
-        >
-          Déconnexion
-        </button>
+  <button
+  className="header__logout"
+  onClick={handleLogout}
+  aria-label="Déconnexion"
+>
+  <LogOut className="header__logout-icon" />
+  <span>Déconnexion</span>
+</button>
 
       </div>
     </header>

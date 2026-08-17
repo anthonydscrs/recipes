@@ -232,6 +232,20 @@
 }
 
 /* =========================
+   COLONNE DROITE (carte + commentaires)
+   Regroupés dans un même conteneur flex pour
+   que les commentaires s'empilent juste sous
+   la carte, indépendamment de la hauteur de
+   la colonne gauche.
+========================= */
+
+.recipe-detail__side {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* =========================
    LIGNE BADGES (+ actions mobile)
 ========================= */
 
@@ -712,6 +726,10 @@
   .recipe-detail__title {
     font-size: 44px;
   }
+
+  .recipe-detail__side {
+    gap: 18px;
+  }
 }
 
 
@@ -744,6 +762,10 @@
   }
 
   .recipe-detail__main {
+    display: contents;
+  }
+
+  .recipe-detail__side {
     display: contents;
   }
 
@@ -904,6 +926,19 @@
 
   .recipe-detail__actions-mobile {
     display: none;
+  }
+
+
+  /* =========================
+     COMMENTAIRES
+     Tout en bas, sous les boutons d'action.
+  ========================= */
+
+  .recipe-detail__comments {
+    order: 7;
+
+    width: 100%;
+    margin-top: 0;
   }
 }
 

@@ -27,6 +27,45 @@
   margin-bottom: 24px;
 }
 
+.planning-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.planning-generate-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  background: #4a9b6e;
+  border: 1px solid #4a9b6e;
+  border-radius: 8px;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.planning-generate-btn:hover:not(:disabled) {
+  background: #3f8760;
+  border-color: #3f8760;
+}
+
+.planning-generate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.planning-generate-btn__icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
 .planning-clear-btn {
   display: flex;
   align-items: center;
@@ -198,26 +237,41 @@
 
 .planning-slot__remove {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 5px;
+  right: 5px;
 
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   border-radius: 50%;
-  background: rgba(74, 64, 56, 0.08);
+  background: #ffffff;
+  border: 1px solid #e6ded5;
 
-  font-size: 9px;
-  color: #9a8a7c;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+
+  color: #a83b3b;
+
+  cursor: pointer;
+
+  box-shadow: 0 1px 4px rgba(74, 64, 56, 0.12);
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
 }
 
 .planning-slot__remove:hover {
   background: #a83b3b;
-  color: #fff;
+  border-color: #a83b3b;
+  color: #ffffff;
+  transform: scale(1.08);
 }
 
 
@@ -557,6 +611,20 @@
     display: none;
   }
 
+  .planning-generate-btn {
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .planning-generate-btn__label {
+    display: none;
+  }
+
 
   /* =========================
      FILTRES MODALE MOBILE
@@ -588,5 +656,18 @@
   .planning-picker-filters .filter-bar__label {
     padding-top: 0;
   }
+  @media (max-width: 600px) {
+
+  .planning-grid--mobile .planning-slot__remove {
+    top: 4px;
+    right: 4px;
+
+    width: 18px;
+    height: 18px;
+
+    font-size: 13px;
+  }
+
+}
 
 }
