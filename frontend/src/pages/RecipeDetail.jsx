@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import HeartBtn from '../components/HeartBtn'
 import StarRating from '../components/StarRating'
 import chat from '../assets/chat.jpg'
+import { useToast } from '../contexts/ToastContext'
 import './RecipeDetail.css'
 
 const PLANNING_DAYS = [
@@ -27,6 +28,7 @@ const CATEGORY_LABELS = {
 }
 
 function RecipeDetail({ recipe, onBack, onEdit, onDeleted, onToggleFavorite, onRatingChange }) {
+  const { showError } = useToast()
   const [activeTab, setActiveTab] = useState('ingredients')
 
   const [rating, setRating] = useState(recipe.rating ?? 0)
@@ -109,6 +111,7 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted, onToggleFavorite, onR
       onRatingChange?.(data.value ?? value)
     } catch (err) {
       console.error('Erreur enregistrement note :', err)
+      showError("Votre note n'a pas été enregistrée.")
       setRating(previousRating)
     }
   }
@@ -188,6 +191,9 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted, onToggleFavorite, onR
       }, 2000)
     } catch (err) {
       console.error('Erreur ajout courses :', err)
+   showError(
+  "L'ajout aux courses a échoué, rien n'a été enregistré."
+)
     } finally {
       setAddingToList(false)
     }
@@ -222,6 +228,9 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted, onToggleFavorite, onR
       setPickingPlanningSlot(true)
     } catch (err) {
       console.error('Erreur chargement planning :', err)
+      showError(
+        'Impossible de charger le planning, réessayez.'
+      )
     } finally {
       setLoadingPlanning(false)
     }
@@ -302,6 +311,10 @@ function RecipeDetail({ recipe, onBack, onEdit, onDeleted, onToggleFavorite, onR
       console.error(
         'Erreur ajout planning :',
         err
+      )
+      showError(
+        err.message ||
+          "L'ajout au planning a échoué, rien n'a été enregistré."
       )
     } finally {
       setAddingToPlanning(false)

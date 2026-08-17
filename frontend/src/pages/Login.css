@@ -1,9 +1,11 @@
-
 /* =========================================
    PAGE DE CONNEXION
 ========================================= */
 
 .login-page {
+  position: relative;
+  overflow: hidden;
+
   min-height: calc(100vh - 60px);
   min-height: 100dvh;
 
@@ -24,15 +26,42 @@
 
 
 /* =========================================
-   MARQUE / LOGO
+   TRACES DE PATTES (décor)
 ========================================= */
 
-.login-page::before {
-  content: 'Jiji-sama';
+.login-paw {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
 
-  display: block;
 
-  margin-bottom: 6px;
+/* =========================================
+   HERO — CHAT + MARQUE / LOGO
+========================================= */
+
+.login-hero {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-bottom: 30px;
+}
+
+.login-cat {
+  width: 150px;
+  height: auto;
+
+  margin-bottom: -6px;
+
+  filter: drop-shadow(0 6px 10px rgba(74, 64, 56, 0.14));
+}
+
+.login-brand {
+  margin: 0;
 
   font-family: 'Fraunces', Georgia, serif;
   font-size: 46px;
@@ -40,8 +69,16 @@
   line-height: 1;
 
   letter-spacing: -0.025em;
- margin-bottom: 36px;
   color: #fc6532;
+}
+
+.login-tagline {
+  margin: 8px 0 0;
+
+  color: #a8968a;
+
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 
@@ -51,6 +88,9 @@
 ========================================= */
 
 .login-form {
+  position: relative;
+  z-index: 1;
+
   width: 100%;
   max-width: 400px;
 
@@ -73,7 +113,7 @@
    TITRE
 ========================================= */
 
-.login-form h1 {
+.login-form h2 {
   margin: 0 0 8px;
 
   color: #3f342d;
@@ -88,7 +128,7 @@
 
 /* Description */
 
-.login-form h1 + p {
+.login-form-subtitle {
   margin: 0 0 30px;
 
   color: #8b7569;
@@ -256,13 +296,12 @@
     padding: 40px 20px;
   }
 
-  .login-page::before {
+  .login-brand {
     font-size: 40px;
   }
 
-  .login-page::after {
-    margin-bottom: 30px;
-    font-size: 12px;
+  .login-tagline {
+    font-size: 13px;
   }
 
   .login-form {
@@ -287,14 +326,20 @@
     padding: 28px 16px;
   }
 
-  .login-page::before {
-    margin-bottom: 34px;
+  .login-hero {
+    margin-bottom: 24px;
+  }
 
+  .login-cat {
+    width: 120px;
+  }
+
+  .login-brand {
     font-size: 34px;
   }
 
-  .login-page::after {
-    margin-bottom: 24px;
+  .login-tagline {
+    margin-top: 6px;
 
     font-size: 11.5px;
   }
@@ -307,13 +352,13 @@
     border-radius: 13px;
   }
 
-  .login-form h1 {
+  .login-form h2 {
     margin-bottom: 7px;
 
     font-size: 22px;
   }
 
-  .login-form h1 + p {
+  .login-form-subtitle {
     margin-bottom: 25px;
 
     font-size: 12px;
