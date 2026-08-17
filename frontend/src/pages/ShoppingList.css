@@ -20,6 +20,37 @@
   color: #4a3327;
 }
 
+/* =========================
+   MASCOTTE : CHAT QUI ATTEND
+   (affichée à la place du chariot, dans l'état "liste vide")
+========================= */
+
+.shopping-cat {
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.shopping-cat__tail {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: shopping-cat-wag 1.6s ease-in-out infinite;
+}
+
+@keyframes shopping-cat-wag {
+  0%, 100% {
+    transform: rotate(-9deg);
+  }
+  50% {
+    transform: rotate(11deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shopping-cat__tail {
+    animation: none;
+  }
+}
+
 .shopping-clear-btn {
   display: flex;
   align-items: center;
@@ -129,7 +160,7 @@
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .shopping-empty__title {

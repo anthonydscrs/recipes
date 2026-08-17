@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import FilterBar from '../components/FilterBar'
 import { useRecipeFilters } from '../hooks/useRecipeFilters'
+import { useToast } from '../contexts/ToastContext'
 import defaultRecipeImage from '../assets/chat.JPG'
 import './Planning.css'
 
@@ -20,6 +21,7 @@ const MEALS = [
 ]
 
 function Planning({ recipes, onSelectRecipe }) {
+  const { showError } = useToast()
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -236,6 +238,10 @@ function Planning({ recipes, onSelectRecipe }) {
         "Erreur ajout planning :",
         err
       )
+      showError(
+        err.message ||
+          "L'ajout au planning a échoué, rien n'a été enregistré."
+      )
     }
   }
 
@@ -283,6 +289,10 @@ function Planning({ recipes, onSelectRecipe }) {
       setConfirmingRemove(null)
     } catch (err) {
       console.error(err)
+      showError(
+        err.message ||
+          "La suppression a échoué, l'élément est toujours dans le planning."
+      )
     } finally {
       setRemoving(false)
     }

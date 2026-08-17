@@ -1,7 +1,73 @@
 import { useEffect, useState } from 'react'
+import { useToast } from '../contexts/ToastContext'
 import './ShoppingList.css'
 
+// ─── Mascotte : chat assis qui attend, queue qui dandine ────────────────────
+function WaitingCat() {
+  return (
+    <svg
+      className="shopping-cat"
+      viewBox="0 0 140 140"
+      width="96"
+      height="96"
+      fill="none"
+      aria-hidden="true"
+    >
+      {/* Queue — animée en CSS (dandine) */}
+      <g className="shopping-cat__tail">
+        <path
+          d="M92 96 Q120 92 126 66 Q130 48 114 40"
+          stroke="#100d0b"
+          strokeWidth="9"
+          strokeLinecap="round"
+          fill="none"
+        />
+      </g>
+
+      {/* Corps assis */}
+      <ellipse cx="62" cy="98" rx="30" ry="26" fill="#100d0b" />
+      {/* Reflet ventre */}
+      <ellipse cx="62" cy="106" rx="15" ry="10" fill="#221c18" opacity="0.6" />
+
+      {/* Cou */}
+      <rect x="50" y="70" width="24" height="15" rx="7" fill="#100d0b" />
+
+      {/* Tête */}
+      <ellipse cx="62" cy="58" rx="25" ry="23" fill="#100d0b" />
+
+      {/* Oreille gauche */}
+      <polygon points="38,40 32,19 53,36" fill="#100d0b" />
+      <polygon points="40,38 36,25 50,36" fill="#3d2a2a" />
+      {/* Oreille droite */}
+      <polygon points="86,40 92,19 71,36" fill="#100d0b" />
+      <polygon points="84,38 88,25 74,36" fill="#3d2a2a" />
+
+      {/* Yeux (mi-clos, chat qui patiente) */}
+      <ellipse cx="53" cy="57" rx="6.5" ry="5" fill="#F3C835" />
+      <ellipse cx="53" cy="57" rx="2.6" ry="4.4" fill="#100d0b" />
+      <ellipse cx="71" cy="57" rx="6.5" ry="5" fill="#F3C835" />
+      <ellipse cx="71" cy="57" rx="2.6" ry="4.4" fill="#100d0b" />
+
+      {/* Nez */}
+      <polygon points="62,63 59,66 65,66" fill="#c87070" />
+      {/* Bouche */}
+      <path d="M59,66 Q62,70 65,66" stroke="#c87070" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+
+      {/* Moustaches */}
+      <line x1="57" y1="65" x2="34" y2="61" stroke="#b8a898" strokeWidth="1.1" strokeLinecap="round" />
+      <line x1="57" y1="67" x2="34" y2="69" stroke="#b8a898" strokeWidth="1.1" strokeLinecap="round" />
+      <line x1="67" y1="65" x2="90" y2="61" stroke="#b8a898" strokeWidth="1.1" strokeLinecap="round" />
+      <line x1="67" y1="67" x2="90" y2="69" stroke="#b8a898" strokeWidth="1.1" strokeLinecap="round" />
+
+      {/* Pattes avant, posées bien sagement */}
+      <ellipse cx="48" cy="120" rx="9" ry="6.5" fill="#100d0b" />
+      <ellipse cx="76" cy="120" rx="9" ry="6.5" fill="#100d0b" />
+    </svg>
+  )
+}
+
 function ShoppingList() {
+  const { showError } = useToast()
   const [items, setItems] = useState([])
   const [label, setLabel] = useState('')
   const [loading, setLoading] = useState(true)
@@ -132,7 +198,7 @@ function ShoppingList() {
       })
       .catch((err) => {
         console.error(err)
-        setError(err.message)
+        setError("Achète de la pâtée plutôt")
       })
   }
 
@@ -175,13 +241,15 @@ function ShoppingList() {
             .catch(() => ({}))
 
           throw new Error(
-            data.error ||
               "Erreur lors de la modification de l'article"
           )
         }
       })
       .catch((err) => {
         console.error(err)
+        showError(
+          "Le changement n'a pas été enregistré."
+        )
 
         // Annule la modification locale
         setItems((prev) =>
@@ -231,9 +299,12 @@ function ShoppingList() {
       })
       .catch((err) => {
         console.error(err)
+        showError(
+          "La suppression n'a pas été enregistrée, la liste va être resynchronisée."
+        )
 
-        // Resynchronise avec le backend
-        window.location.reload()
+        // Resynchronise avec le backend (laisse le temps de lire la notification)
+        setTimeout(() => window.location.reload(), 1800)
       })
   }
 
@@ -457,75 +528,7 @@ function ShoppingList() {
                 className="shopping-empty__cart"
                 aria-hidden="true"
               >
-                <svg
-                  viewBox="0 0 64 64"
-                  width="52"
-                  height="52"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-
-                  <path
-                    d="M8 10H14L19 39H49L55 19H17"
-                    stroke="#171717"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-
-                  <path
-                    d="M19 39L21 45H47"
-                    stroke="#171717"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-
-                  <circle
-                    cx="25"
-                    cy="52"
-                    r="3.5"
-                    stroke="#171717"
-                    strokeWidth="3"
-                  />
-
-                  <circle
-                    cx="45"
-                    cy="52"
-                    r="3.5"
-                    stroke="#171717"
-                    strokeWidth="3"
-                  />
-
-                  <circle
-                    cx="55"
-                    cy="12"
-                    r="4"
-                    fill="#FC6532"
-                  />
-
-                  <path
-                    d="M25 22L28 37"
-                    stroke="#171717"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-
-                  <path
-                    d="M34 22L36 37"
-                    stroke="#171717"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-
-                  <path
-                    d="M43 22L44 37"
-                    stroke="#171717"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-
-                </svg>
+                <WaitingCat />
               </div>
 
               <p className="shopping-empty__title">

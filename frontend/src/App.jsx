@@ -13,12 +13,15 @@ import Login from './pages/Login'
 import { useRecipeFilters } from './hooks/useRecipeFilters'
 import { usePagination } from './hooks/usePagination'
 import { useAuth } from './contexts/AuthContext'
+import { useToast } from './contexts/ToastContext'
 
 function App() {
   const {
     user,
     isAuthenticated,
   } = useAuth()
+
+  const { showError } = useToast()
 
   const [tab, setTab] = useState('recettes')
   const [recipes, setRecipes] = useState([])
@@ -169,6 +172,9 @@ function App() {
       })
       .catch((err) => {
         console.error(err)
+        showError(
+          "La mise à jour des favoris n'a pas été enregistrée."
+        )
 
         // Annule la modification locale si le backend échoue
         setFavoriteIds((prev) => {
