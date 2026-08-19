@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 
-import RecipeDetail from './RecipeDetail'
+import RecipeDetail from '../components/RecipeDetail'
 import { useRecipes } from '../contexts/RecipesContext'
 
 function RecipeDetailPage() {

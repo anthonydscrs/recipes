@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 
-import AddRecipe from './AddRecipe'
+import AddRecipe from '../components/AddRecipe'
 import { useRecipes } from '../contexts/RecipesContext'
 
 function AddRecipePage() {

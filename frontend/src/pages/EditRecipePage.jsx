@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 
-import EditRecipe from './EditRecipe'
+import EditRecipe from '../components/EditRecipe'
 import { useRecipes } from '../contexts/RecipesContext'
 
 function EditRecipePage() {
