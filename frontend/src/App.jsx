@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 
-import { useAuth } from './contexts/AuthContext'
-import { RecipesProvider } from './contexts/RecipesContext'
+import { useAuth } from './contexts_tmp/AuthContext'
+import { RecipesProvider } from './contexts_tmp/RecipesContext'
 
 import MainLayout from './layouts/MainLayout'
 

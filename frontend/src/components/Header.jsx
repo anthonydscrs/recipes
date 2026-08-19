@@ -6,7 +6,7 @@ import {
   CalendarDays,
    LogOut
 } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts_tmp/AuthContext'
 
 const navLinkClass = ({ isActive }) =>
   `header__link ${isActive ? 'header__link--active' : ''}`
