@@ -15,7 +15,8 @@ const login = async (pseudo, password) => {
     `,
     [pseudo]
   )
-
+console.log('LOGIN pseudo reçu :', pseudo)
+console.log('UTILISATEUR TROUVÉ :', rows.length)
   if (rows.length === 0) {
     throw new Error(
       'Identifiants incorrects'
