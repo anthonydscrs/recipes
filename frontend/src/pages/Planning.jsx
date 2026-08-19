@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import FilterBar from '../components/FilterBar'
 import { useRecipeFilters } from '../hooks/useRecipeFilters'
 import { useToast } from '../contexts/ToastContext'
+import { useRecipes } from '../contexts/RecipesContext'
 import defaultRecipeImage from '../assets/chat.JPG'
 import './Planning.css'
 
@@ -20,7 +22,9 @@ const MEALS = [
   { key: 'diner', label: 'Dîner', icon: '🌙' },
 ]
 
-function Planning({ recipes, onSelectRecipe }) {
+function Planning() {
+  const navigate = useNavigate()
+  const { recipes } = useRecipes()
   const { showError, showToast } = useToast()
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -129,11 +133,7 @@ function Planning({ recipes, onSelectRecipe }) {
         <button
           className="planning-slot planning-slot--filled"
           onClick={() =>
-            onSelectRecipe
-              ? onSelectRecipe({
-                  id: item.recipe_id,
-                })
-              : null
+            navigate(`/recette/${item.recipe_id}`)
           }
         >
           <img
