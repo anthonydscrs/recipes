@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import HeartBtn from '../components/HeartBtn'
 import StarRating from '../components/StarRating'
 import CommentSection from '../components/CommentSection'
-import chat from '../assets/chat.jpg'
+import chat from '../assets/chat.JPG'
 import { useToast } from '../contexts/ToastContext'
 import './RecipeDetail.css'
 

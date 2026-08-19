@@ -1,5 +1,5 @@
 import HeartBtn from './HeartBtn'
-import chat from '../assets/chat.jpg'
+import chat from '../assets/chat.JPG'
 import './RecipeCard.css'
 
 const CATEGORY_LABELS = {
