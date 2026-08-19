@@ -1,3 +1,4 @@
+import { NavLink, useNavigate } from 'react-router-dom'
 import './Header.css'
 import {
   Utensils,
@@ -5,64 +6,54 @@ import {
   CalendarDays,
    LogOut
 } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
 
-function Header({ tab, setTab }) {
+const navLinkClass = ({ isActive }) =>
+  `header__link ${isActive ? 'header__link--active' : ''}`
+
+function Header() {
+  const { logout } = useAuth()
+  const navigate = useNavigate()
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-
-    window.location.reload()
+    logout()
+    navigate('/login')
   }
 
   return (
     <header className="header">
       <div className="header__container">
 
-        <button
-          className="header__logo"
-          onClick={() => setTab('recettes')}
-        >
+        <NavLink className="header__logo" to="/">
           Jiji-sama
-        </button>
+        </NavLink>
 
         <nav className="header__nav">
 
-          <button
-            className={`header__link ${
-              tab === 'recettes'
-                ? 'header__link--active'
-                : ''
-            }`}
-            onClick={() => setTab('recettes')}
+          <NavLink
+            className={navLinkClass}
+            to="/"
+            end
           >
             <Utensils className="header__icon" />
             <span>Recettes</span>
-          </button>
+          </NavLink>
 
-          <button
-            className={`header__link ${
-              tab === 'courses'
-                ? 'header__link--active'
-                : ''
-            }`}
-            onClick={() => setTab('courses')}
+          <NavLink
+            className={navLinkClass}
+            to="/courses"
           >
             <ShoppingCart className="header__icon" />
             <span>Liste de courses</span>
-          </button>
+          </NavLink>
 
-          <button
-            className={`header__link ${
-              tab === 'planning'
-                ? 'header__link--active'
-                : ''
-            }`}
-            onClick={() => setTab('planning')}
+          <NavLink
+            className={navLinkClass}
+            to="/planning"
           >
             <CalendarDays className="header__icon" />
             <span>Planning</span>
-          </button>
+          </NavLink>
 
         </nav>
 
