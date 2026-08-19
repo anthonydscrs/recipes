@@ -3,10 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "type": "commonjs",
-  "scripts": {
-    "dev": "node --watch index.js",
-    "migrate": "node migrate.js"
-  },
+"scripts": {
+  "dev": "node --watch index.js",
+  "start": "node index.js",
+  "migrate": "node migrate.js"
+},
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cloudinary": "^1.41.0",
