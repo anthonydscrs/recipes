@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAuth } from '../contexts_tmp/AuthContext'
+import { useAuth } from '../contexts/AuthContext'
 import catIllustration from '../assets/chatt.png'
 import './Login.css'
 

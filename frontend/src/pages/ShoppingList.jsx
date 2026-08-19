@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useToast } from '../contexts_tmp/ToastContext'
+import { useToast } from '../contexts/ToastContext'
 import './ShoppingList.css'
 
 // ─── Mascotte : chat assis qui attend, queue qui dandine ────────────────────

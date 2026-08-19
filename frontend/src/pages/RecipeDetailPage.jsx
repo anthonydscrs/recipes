@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 
 import RecipeDetail from '../components/RecipeDetail'
-import { useRecipes } from '../contexts_tmp/RecipesContext'
+import { useRecipes } from '../contexts/RecipesContext'
 
 function RecipeDetailPage() {
   const { id } = useParams()

@@ -5,7 +5,7 @@ import FilterBar from '../components/FilterBar'
 
 import { useRecipeFilters } from '../hooks/useRecipeFilters'
 import { usePagination } from '../hooks/usePagination'
-import { useRecipes } from '../contexts_tmp/RecipesContext'
+import { useRecipes } from '../contexts/RecipesContext'
 
 function RecipesPage() {
   const navigate = useNavigate()

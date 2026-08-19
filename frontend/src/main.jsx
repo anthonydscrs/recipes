@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
-import { AuthProvider } from './contexts_tmp/AuthContext'
-import { ToastProvider } from './contexts_tmp/ToastContext'
+import { AuthProvider } from './contexts/AuthContext'
+import { ToastProvider } from './contexts/ToastContext'
 
 import './index.css'
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { useAuth } from '../contexts_tmp/AuthContext'
-import { useToast } from '../contexts_tmp/ToastContext'
+import { useAuth } from '../contexts/AuthContext'
+import { useToast } from '../contexts/ToastContext'
 import './CommentSection.css'
 
 const MAX_LENGTH = 1000
