@@ -1,7 +1,7 @@
 -- ============================================
 -- GROUPS (foyer / couple)
 -- ============================================
-CREATE TABLE IF NOT EXISTS groups  (
+CREATE TABLE IF NOT EXISTS `groups`    (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash VARCHAR(255) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE SET NULL
+ FOREIGN KEY (group_id) REFERENCES `groups`(id) ON DELETE SET NULL
 );
 
 -- ============================================
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS recipes (
 
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
+  FOREIGN KEY (group_id) REFERENCES `groups`(id) ON DELETE CASCADE,
   FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS shopping_list_items (
 
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
+ FOREIGN KEY (group_id) REFERENCES `groups`(id) ON DELETE CASCADE,
   FOREIGN KEY (added_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS planning_items (
  
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
  
-  FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
+  FOREIGN KEY (group_id) REFERENCES `groups`(id) ON DELETE CASCADE,
   FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
   FOREIGN KEY (added_by) REFERENCES users(id) ON DELETE SET NULL,
  
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS comments (
 -- DONNÉES D'EXEMPLE
 -- ============================================
 
-INSERT INTO groups (id, name) VALUES
+INSERT INTO `groups` (id, name) VALUES
   (1, 'Foyer de test');
 
   INSERT INTO users (id, group_id, pseudo, password_hash) VALUES
@@ -597,7 +597,7 @@ Laisser mijoter environ 10 minutes.
 Verser la sauce sur les blancs de poulet.
 Saupoudrer de gruyère râpé.
 Enfourner environ 15 minutes jusqu''à ce que le fromage soit bien gratiné.'
-);
+)
 ON DUPLICATE KEY UPDATE
   title = VALUES(title),
   description = VALUES(description),

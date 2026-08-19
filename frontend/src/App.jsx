@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 
 import { useAuth } from './contexts/AuthContext'
 import { RecipesProvider } from './contexts/RecipesContext'
-
+import ScrollToTop from './components/ScrollToTop'
 import MainLayout from './layouts/MainLayout'
 
 import Login from './pages/Login'
@@ -37,6 +37,8 @@ function App() {
   const { isAuthenticated } = useAuth()
 
   return (
+       <>
+    <ScrollToTop />
     <Routes>
 
       <Route
@@ -79,6 +81,7 @@ function App() {
       />
 
     </Routes>
+    </>
   )
 }
 

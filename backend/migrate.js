@@ -17,27 +17,25 @@ const migrate = async () => {
   try {
     console.log(`Connexion à la base "${DB_NAME}"...`)
 
-    connection = await mysql.createConnection({
-      host: DB_HOST,
-      port: DB_PORT,
-      user: DB_USER,
-      password: DB_PASSWORD,
-      multipleStatements: true,
-    })
-
-    // Supprime complètement la base
-    await connection.query(`DROP DATABASE IF EXISTS \`${DB_NAME}\``)
-
-    // Recrée la base
-    await connection.query(`CREATE DATABASE \`${DB_NAME}\``)
-
-    // Sélectionne la base
-    await connection.query(`USE \`${DB_NAME}\``)
+connection = await mysql.createConnection({
+  host: DB_HOST,
+  port: DB_PORT,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  database: DB_NAME,
+  multipleStatements: true,
+  ssl: {
+    minVersion: 'TLSv1.2',
+    ca: fs.readFileSync('./ca.pem'),
+  },
+})
 
     // Lit database.sql
     const sql = fs.readFileSync('./database.sql', 'utf8')
 
     // Exécute tout le fichier
+    // (CREATE TABLE IF NOT EXISTS + INSERT ... ON DUPLICATE KEY UPDATE
+    // sont "safe" à rejouer plusieurs fois sans tout casser)
     await connection.query(sql)
 
     console.log('Migration terminée avec succès !')

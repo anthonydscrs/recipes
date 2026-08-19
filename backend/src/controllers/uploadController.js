@@ -3,10 +3,7 @@ const uploadImage = (req, res) => {
     return res.status(400).json({ error: "Aucune image reçue" });
   }
 
-  // URL absolue, directement utilisable comme image_url pour une recette
-  const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-
-  res.status(201).json({ image_url: imageUrl });
+  res.status(201).json({ image_url: req.file.path });
 };
 
 module.exports = { uploadImage };
