@@ -7,6 +7,7 @@ const CATEGORY_LABELS = {
   'végé': '🥦 Végé',
   'féculent': '🌾 Féculent',
   dessert: '🍰 Dessert',
+  cocktail: '🍸 Cocktail',
 }
 
 function RecipeCard({ recipe, onClick, onToggleFavorite }) {

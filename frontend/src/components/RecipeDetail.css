@@ -307,6 +307,11 @@
   color: #a25b91;
 }
 
+.recipe-detail__badge--cocktail {
+  background: #ede3f5;
+  color: #7a4a9e;
+}
+
 /* =========================
    ACTIONS MOBILE (icônes, à côté des badges)
    Cachées sur PC, visibles seulement en mobile (media query plus bas)
@@ -758,7 +763,7 @@
   .recipe-detail__layout {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 8px;
   }
 
   .recipe-detail__main {
@@ -816,11 +821,22 @@
 
 
   /* =========================
+     BADGES (SAISON + CATEGORIES)
+  ========================= */
+
+  .recipe-detail__badges-row {
+    order: 4;
+
+    margin-bottom: 0;
+  }
+
+
+  /* =========================
      DESCRIPTION
   ========================= */
 
   .recipe-detail__description {
-    order: 4;
+    order: 5;
 
     width: 100%;
     max-width: none;
@@ -838,10 +854,10 @@
   ========================= */
 
   .recipe-detail__card {
-    order: 5;
+    order: 6;
 
     width: 100%;
-    margin: 0;
+    margin: 12px 0 0;
 
     border-radius: 14px;
   }
@@ -876,7 +892,7 @@
   ========================= */
 
   .recipe-detail__footer-actions {
-    order: 6;
+    order: 7;
 
     display: grid;
 
@@ -886,7 +902,7 @@
 
     width: 100%;
 
-    margin-top: 0;
+    margin-top: 8px;
   }
 
   .recipe-detail__action {
@@ -915,14 +931,10 @@
 
 
   /* =========================
-     ON CACHE LES ACTIONS
-     QUI ÉTAIENT À CÔTÉ
-     DES BADGES
+     ON CACHE LES ICONES
+     RAPIDES (déjà présentes
+     dans les boutons du bas)
   ========================= */
-
-  .recipe-detail__badges-row {
-    display: none;
-  }
 
   .recipe-detail__actions-mobile {
     display: none;
@@ -935,10 +947,10 @@
   ========================= */
 
   .recipe-detail__comments {
-    order: 7;
+    order: 8;
 
     width: 100%;
-    margin-top: 0;
+    margin-top: 12px;
   }
 }
 

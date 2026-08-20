@@ -28,10 +28,10 @@ function EditRecipePage() {
   return (
     <EditRecipe
       recipe={recipe}
-      onBack={() => navigate(-1)}
+      onBack={() => navigate(`/recette/${id}`)}
       onUpdated={(updated) => {
         updateRecipe(updated)
-        navigate(`/recette/${updated.id}`)
+        navigate(`/recette/${updated.id}`, { replace: true })
       }}
     />
   )

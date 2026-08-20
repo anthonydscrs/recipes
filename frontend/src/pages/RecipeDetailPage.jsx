@@ -34,7 +34,7 @@ function RecipeDetailPage() {
   return (
     <RecipeDetail
       recipe={recipe}
-      onBack={() => navigate(-1)}
+      onBack={() => navigate('/')}
       onToggleFavorite={() =>
         toggleFavorite(recipe.id)
       }

@@ -9,10 +9,10 @@ function AddRecipePage() {
 
   return (
     <AddRecipe
-      onBack={() => navigate(-1)}
+      onBack={() => navigate('/')}
       onCreated={(created) => {
         addRecipe(created)
-        navigate(`/recette/${created.id}`)
+        navigate(`/recette/${created.id}`, { replace: true })
       }}
     />
   )
