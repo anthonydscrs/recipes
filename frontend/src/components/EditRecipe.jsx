@@ -6,6 +6,7 @@ const CATEGORIES = [
   { value: 'végé', label: '🥦 Végé' },
   { value: 'féculent', label: '🌾 Féculent' },
   { value: 'dessert', label: '🍰 Dessert' },
+  { value: 'cocktail', label: '🍸 Cocktail' },
 ]
 
 const SEASONS = [

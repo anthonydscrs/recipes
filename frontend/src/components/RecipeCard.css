@@ -94,6 +94,12 @@
   color: #9A8A7C;
 }
 
+.recipe-badge--cocktail {
+  background:#ede3f5;
+
+  color: #8b55b4;
+}
+
 /* Cœur — à droite, toujours au-dessus */
 
 .recipe-card__heart {

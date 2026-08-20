@@ -6,7 +6,7 @@ const pool = require("../database");
 // l'utilisateur connecté (sinon n'importe quel utilisateur authentifié
 // pourrait lire ou modifier les recettes d'un autre groupe).
 
-const ALLOWED_CATEGORIES = ["viande", "végé", "féculent", "dessert"];
+const ALLOWED_CATEGORIES = ["viande", "végé", "féculent", "dessert", "cocktail"];
 
 const normalizeCategories = (category) => {
   const list = Array.isArray(category)

@@ -26,6 +26,7 @@ const CATEGORY_LABELS = {
   'végé': '🥦 Végé',
   'féculent': '🌾 Féculent',
   dessert: '🍰 Dessert',
+  cocktail: '🍸 Cocktail',
 }
 
 function RecipeDetail({ recipe, onBack, onEdit, onDeleted, onToggleFavorite, onRatingChange }) {
